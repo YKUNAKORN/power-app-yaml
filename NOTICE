@@ -1,6 +1,6 @@
 This project bundles a third-party file:
 
-  references/schema-v3.pa.yaml
+  skills/power-app-yaml/references/schema-v3.pa.yaml
 
 That file is a copy of Microsoft's official Power Apps YAML schema (v3.0), taken from:
 

@@ -1,0 +1,53 @@
+name: Bug report
+description: A .pa.yaml the skill produced did not paste, or the skill misbehaved
+title: "[bug] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did the skill produce, and what did Studio (or Claude) do with it?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: yaml
+    attributes:
+      label: The .pa.yaml (or the relevant part)
+      render: yaml
+    validations:
+      required: true
+  - type: input
+    id: studio-error
+    attributes:
+      label: Exact Studio error / warning code
+      placeholder: "PA1001: ..."
+    validations:
+      required: false
+  - type: input
+    id: studio-version
+    attributes:
+      label: Power Apps Studio version
+      placeholder: "3.24102.x"
+    validations:
+      required: false
+  - type: input
+    id: how-loaded
+    attributes:
+      label: How you loaded the skill
+      placeholder: "Claude Code plugin v0.1.0 / skill folder / other"
+    validations:
+      required: false
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: The original mockup/screenshot, the prompt you used, etc.
+    validations:
+      required: false

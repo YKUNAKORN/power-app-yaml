@@ -1,0 +1,17 @@
+{
+  "name": "power-app-yaml",
+  "owner": {
+    "name": "YKUNAKORN",
+    "url": "https://github.com/YKUNAKORN"
+  },
+  "metadata": {
+    "description": "A Claude skill that converts HTML/CSS mockups and UI screenshots into paste-ready Power Apps Canvas YAML.",
+    "pluginRoot": "."
+  },
+  "plugins": [
+    {
+      "name": "power-app-yaml",
+      "source": "."
+    }
+  ]
+}

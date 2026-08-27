@@ -1,0 +1,22 @@
+{
+  "name": "power-app-yaml",
+  "version": "0.1.0",
+  "description": "Turn an HTML/CSS mockup or a UI screenshot into Power Apps Canvas source code (.pa.yaml, source schema v3.0) that pastes straight into Power Apps Studio.",
+  "author": {
+    "name": "YKUNAKORN",
+    "url": "https://github.com/YKUNAKORN"
+  },
+  "homepage": "https://github.com/YKUNAKORN/power-app-yaml",
+  "repository": "https://github.com/YKUNAKORN/power-app-yaml",
+  "license": "MIT",
+  "keywords": [
+    "power-apps",
+    "canvas-apps",
+    "pa-yaml",
+    "power-fx",
+    "low-code",
+    "claude-skill",
+    "html-to-powerapps",
+    "screenshot-to-code"
+  ]
+}

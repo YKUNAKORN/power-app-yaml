@@ -1,0 +1,69 @@
+name: Control test report
+description: Report what Power Apps Studio does with a control or property (the catalog's lifeblood)
+title: "[control] <Control@version> / <Property>"
+labels: ["catalog", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Studio pins control versions, so a result is only useful with context.
+        Please fill in every required field. See `CONTRIBUTING.md` for examples.
+  - type: input
+    id: control
+    attributes:
+      label: Control type and version
+      description: Exactly as it appeared in the YAML.
+      placeholder: "Classic/DropDown@2.3.1"
+    validations:
+      required: true
+  - type: input
+    id: property
+    attributes:
+      label: Property tested
+      description: Leave as "(the control itself)" if you were testing whether the control type pastes at all.
+      placeholder: "ChevronBackground"
+    validations:
+      required: true
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Studio outcome
+      options:
+        - "Pasted cleanly — no error, no warning"
+        - "Pasted with a non-blocking version warning (PA2105 / PA2106)"
+        - "Blocked the paste (PA1001)"
+        - "Blocked the paste (PA2108)"
+        - "Blocked / errored — other code (put it in the notes)"
+        - "Pasted but rendered wrong (describe below)"
+    validations:
+      required: true
+  - type: input
+    id: studio-version
+    attributes:
+      label: Power Apps Studio version
+      description: Studio → ? → About.
+      placeholder: "3.24102.x"
+    validations:
+      required: true
+  - type: textarea
+    id: snippet
+    attributes:
+      label: Minimal YAML you pasted
+      description: A full `Screens:` wrapper with just this one control. Will be rendered as YAML.
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / exact error text
+      description: Paste the full Studio message, and anything else worth knowing.
+    validations:
+      required: false
+  - type: checkboxes
+    id: catalog-state
+    attributes:
+      label: Current catalog
+      options:
+        - label: I checked `skills/power-app-yaml/references/confirmed-controls.md` and it is missing or wrong about this
+          required: true

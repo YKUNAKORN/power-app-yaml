@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest a workflow change, a new template, or a new example screen
+title: "[idea] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve
+      description: What does the skill do today that is awkward, missing, or wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: A new control template? A new example screen archetype? A workflow step?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - SKILL.md workflow / rules
+        - Control picker / templates
+        - confirmed-controls.md catalog
+        - Example screens
+        - Docs
+        - Packaging / CI
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+    validations:
+      required: false

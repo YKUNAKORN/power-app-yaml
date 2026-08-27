@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 <YOUR NAME OR GITHUB HANDLE>
+Copyright (c) 2026 YKUNAKORN (https://github.com/YKUNAKORN)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,9 @@ SOFTWARE.
 
 ---
 
-This license covers the skill itself (SKILL.md, references/confirmed-controls.md,
-and the files under assets/). It does NOT cover references/schema-v3.pa.yaml,
-which is Microsoft's official Power Apps pa.yaml v3.0 schema, licensed separately
-under the MIT License by Microsoft Corporation. See the NOTICE file.
+This license covers the skill itself (everything under skills/power-app-yaml/,
+including SKILL.md, references/confirmed-controls.md, and the files under assets/)
+and the repository's own documentation. It does NOT cover
+skills/power-app-yaml/references/schema-v3.pa.yaml, which is Microsoft's official
+Power Apps pa.yaml v3.0 schema, licensed separately under the MIT License by
+Microsoft Corporation. See the NOTICE file.
