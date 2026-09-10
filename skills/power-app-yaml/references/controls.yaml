@@ -1,5 +1,24 @@
 # Machine-readable control catalog for Power Apps Canvas .pa.yaml
 #
+# =============================================================================
+# THE ABSENCE CAVEAT -- read this before drawing any conclusion from this file
+# =============================================================================
+# Power Apps Studio's export ("View code", `pac canvas download`, the `src\` folder
+# inside an .msapp) only writes properties whose value DIFFERS FROM THE DEFAULT.
+#
+#   A property missing from an export is NOT evidence that the control lacks it.
+#   A property missing from this file is NOT evidence that the control lacks it.
+#
+# So this catalog records positive results only. It never claims a control "does not
+# support" anything, and there is no such list to add one to. `scripts/harvest_controls.py`
+# enforces the same rule mechanically: it never writes to `properties_unverified`, never
+# removes an entry, and its "never exercised by this export" report section means
+# UNTESTED, not UNSUPPORTED. See docs/harvesting.md.
+#
+# The mirror image of the caveat still holds, and is what makes the file useful:
+# anything absent from here is UNVERIFIED, so do not use it without a paste test.
+# =============================================================================
+#
 # THIS FILE IS THE SINGLE SOURCE OF TRUTH.
 # `confirmed-controls.md` is the human-readable view of the same facts; when the two
 # disagree, fix both in the same commit.
@@ -12,6 +31,10 @@
 #   - Never add a control or property by analogy with HTML/CSS or with another
 #     Power Apps control. Evidence or nothing.
 #   - Anything absent from this file is UNVERIFIED by definition.
+#   - Growing this file from a real Studio export is the preferred route:
+#     `python scripts/harvest_controls.py <export> --report --merge`
+#     (docs/harvesting.md). Review the diff before committing; the tool reports
+#     conflicts, it never resolves them.
 
 schema_version: 1
 catalog_updated: "2026-09-10"
@@ -30,9 +53,8 @@ studio_version_tested: unknown
 #   unverified     - no evidence either way. Paste-test in isolation before trusting.
 evidence_levels: [studio-tested, studio-export, example-file, unverified]
 
-# Caveat carried over from confirmed-controls.md: Studio's "View code" only exports
-# properties that differ from their default. A property missing from an export does NOT
-# prove the control lacks it. Do not over-conclude from absence.
+# Reminder: see THE ABSENCE CAVEAT at the top of this file. `studio-export` evidence is
+# a positive result only -- what an export omits proves nothing either way.
 
 # Accepted on every control tried so far.
 universal_properties: [X, Y, Width, Height, Fill, Visible]

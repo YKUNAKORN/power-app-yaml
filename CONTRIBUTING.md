@@ -41,6 +41,18 @@ The catalog lives in **two files that must be edited together**:
 `scripts/validate.py` fails if a control appears in one file but not the other, so a PR
 touching only the Markdown will not pass CI.
 
+Two other files sit alongside them:
+
+| File | Role |
+|---|---|
+| `references/control-ids-candidate.yaml` | Microsoft's first-party control-id enum, mirrored. Every entry is `evidence: unverified` and CI enforces that. It only improves a linter message; nothing in it may be promoted to `controls.yaml` without a Studio test. |
+| `scripts/harvest_controls.py` | Grows `controls.yaml` from a real Studio export. See [`docs/harvesting.md`](docs/harvesting.md). |
+
+If you grew the catalog from an export rather than a paste test, say so in the PR and leave the
+entry at `evidence: studio-export`. And remember the caveat that governs harvesting: Studio only
+serialises properties that differ from their default, so **absence in an export is never evidence
+that a control lacks a property**. Never add a "does not support" claim from a harvest.
+
 - **Never** move an item from "unverified" to "confirmed" without a Studio test to cite.
 - Keep the empirical tone: say *which Studio version* confirmed it.
 - If a newer Studio changes a version number, add a row — don't overwrite history.

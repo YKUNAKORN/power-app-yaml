@@ -57,6 +57,13 @@ check((SKILL_DIR / "references" / "confirmed-controls.md").is_file(),
 check((SKILL_DIR / "references" / "controls.yaml").is_file(),
       "controls.yaml present", "the machine-readable catalog scripts/pa_lint.py reads")
 check((ROOT / "scripts" / "pa_lint.py").is_file(), "scripts/pa_lint.py present")
+check((ROOT / "scripts" / "harvest_controls.py").is_file(),
+      "scripts/harvest_controls.py present",
+      "the Studio-export harvester documented in docs/harvesting.md")
+check((ROOT / "docs" / "harvesting.md").is_file(), "docs/harvesting.md present")
+check((SKILL_DIR / "references" / "control-ids-candidate.yaml").is_file(),
+      "control-ids-candidate.yaml present",
+      "the mirrored Microsoft control-id enum pa_lint.py reads for wording")
 check(not (ROOT / "skill").exists(), "no stray top-level skill/ directory")
 check(not (ROOT / "confirmed-controls.md").exists(),
       "no duplicate confirmed-controls.md at repo root")
@@ -123,6 +130,15 @@ if isinstance(catalog, dict):
 
     yaml_types = {e.get("type") for e in entries}
 
+    # A harvest merge adds a control entry but deliberately does not edit the
+    # hand-curated "not yet attempted" list; this is the check that catches the
+    # leftover. See docs/harvesting.md.
+    catalogued_bases = {str(t).split("@", 1)[0].rsplit("/", 1)[-1] for t in yaml_types}
+    overlap = sorted(catalogued_bases & set(catalog.get("unattempted_controls") or []))
+    check(not overlap,
+          "no control is both catalogued and listed in unattempted_controls",
+          f"remove from unattempted_controls: {overlap}")
+
     # Cross-check against the human-readable view: the two must not drift apart.
     md_text = (SKILL_DIR / "references" / "confirmed-controls.md").read_text(encoding="utf-8")
     section = md_text.split("## Control types", 1)[-1].split("\n## ", 1)[0]
@@ -144,6 +160,31 @@ if isinstance(catalog, dict):
           f"missing from controls.yaml: {sorted(md_types - yaml_types)}")
     check(yaml_types <= md_types, "every control in controls.yaml is in confirmed-controls.md",
           f"missing from the markdown: {sorted(yaml_types - md_types)}")
+
+print("Candidate control ids (control-ids-candidate.yaml)")
+candidates_path = SKILL_DIR / "references" / "control-ids-candidate.yaml"
+candidates = None
+if candidates_path.is_file():
+    try:
+        candidates = yaml.safe_load(candidates_path.read_text(encoding="utf-8"))
+        check(isinstance(candidates, dict), "control-ids-candidate.yaml parses as a mapping")
+    except yaml.YAMLError as e:
+        check(False, "control-ids-candidate.yaml parses as YAML", str(e))
+
+if isinstance(candidates, dict):
+    ids = candidates.get("control_ids") or []
+    check(bool(ids), "control-ids-candidate.yaml lists control_ids")
+    # The whole point of this file is that it is a hint, not evidence. A single entry
+    # promoted here would quietly turn Microsoft's internal enum into a confirmation.
+    not_unverified = [e.get("id") for e in ids
+                      if not isinstance(e, dict) or e.get("evidence") != "unverified"]
+    check(not not_unverified,
+          "every candidate control id is marked evidence: unverified",
+          f"not unverified: {not_unverified}")
+    for key in ("upstream_repo", "upstream_path", "upstream_commit", "retrieved"):
+        check(bool(str(candidates.get(key) or "").strip()),
+              f"control-ids-candidate.yaml records '{key}'",
+              "provenance is the only thing that makes this file re-checkable")
 
 print("Linter accepts the bundled examples")
 lint = ROOT / "scripts" / "pa_lint.py"

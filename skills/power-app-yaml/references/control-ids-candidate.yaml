@@ -1,0 +1,240 @@
+# Candidate first-party control type ids -- NOT a confirmation of anything.
+#
+# WHERE THIS COMES FROM
+#   microsoft/PowerApps-Tooling, file:
+#     src/schemas/pa-yaml/v3.0/ControlLibraryVDev/ControlTypeId-1P-controls-enum.schema.yaml
+#   commit  aed72a37c3b10b08f81c9d2257d5c38da33dccbe  (2026-08-24)
+#   sha256  db2598fa9bd03dd24040e99c3f83c705c5da76baceec3e4c0e9cd55cbd3a2639
+#   Retrieved 2026-09-10. See docs/harvesting.md for the full write-up.
+#
+# WHY EVERY ENTRY IS `unverified`
+#   1. The list is Microsoft's *tooling* view, not a paste test. It says the schema
+#      authors expect the id to exist; it says nothing about which Studio build accepts
+#      it, which @version to write, or which properties it takes.
+#   2. It lives under `ControlLibraryVDev` -- a development snapshot of the control
+#      library, explicitly versioned as "VDev". It can move.
+#   3. The *published* schema this repo bundles
+#      (`references/schema-v3.pa.yaml`, byte-identical to upstream
+#      `schemas/pa-yaml/v3.0/pa.schema.yaml`) deliberately leaves the enum open --
+#      it defines `ControlTypeId-1P-controls-enum: true`, matching anything. Microsoft
+#      ships the closed enum only in the source tree, not in the distributed schema.
+#   4. The ids here carry NO `Classic/` prefix except `Classic/Icon`, while this
+#      repo's own Studio paste tests confirm `Classic/Button@2.2.0`,
+#      `Classic/TextInput@2.3.2`, `Classic/DropDown@2.3.1` and `Classic/Radio@2.3.0`.
+#      Bare `Button` and `Classic/Button` are not interchangeable. That unresolved
+#      disagreement is on its own reason enough to trust nothing here without a test.
+#
+# HOW IT IS USED
+#   `scripts/pa_lint.py` reads this file to improve one message only. A control type
+#   found here is reported as "known to Microsoft's tooling but not yet paste-tested
+#   here" instead of "unknown control". It is still a WARNING, still needs an
+#   `# UNVERIFIED` tag, and still needs a Studio paste test.
+#
+# NOTHING IN THIS FILE MAY BE PROMOTED TO `controls.yaml` WITHOUT A STUDIO TEST.
+# It is a hint for humans and for the linter's wording, never evidence.
+
+schema_version: 1
+retrieved: "2026-09-10"
+upstream_repo: microsoft/PowerApps-Tooling
+upstream_path: src/schemas/pa-yaml/v3.0/ControlLibraryVDev/ControlTypeId-1P-controls-enum.schema.yaml
+upstream_commit: aed72a37c3b10b08f81c9d2257d5c38da33dccbe
+upstream_commit_date: "2026-08-24"
+
+# Versions are absent on purpose: the enum carries none, and inventing one would be
+# exactly the guess this project exists to prevent.
+control_ids:
+
+  - id: DataField
+    evidence: unverified
+
+  - id: AddMedia
+    evidence: unverified
+
+  - id: Attachments
+    evidence: unverified
+
+  - id: Audio
+    evidence: unverified
+
+  - id: Button
+    evidence: unverified
+    catalog: controls.yaml has Classic/Button, not bare Button -- unresolved
+
+  - id: Camera
+    evidence: unverified
+
+  - id: CheckBox
+    evidence: unverified
+
+  - id: Circle
+    evidence: unverified
+
+  - id: ComboBox
+    evidence: unverified
+
+  - id: DatePicker
+    evidence: unverified
+
+  - id: DropDown
+    evidence: unverified
+    catalog: controls.yaml has Classic/DropDown, not bare DropDown -- unresolved
+
+  - id: Form
+    evidence: unverified
+
+  - id: TypedDataCard
+    evidence: unverified
+
+  - id: DataCard
+    evidence: unverified
+
+  - id: Gallery
+    evidence: unverified
+
+  - id: GroupContainer
+    evidence: unverified
+    catalog: paste-tested under this id in controls.yaml
+
+  - id: Classic/Icon
+    evidence: unverified
+    catalog: paste-tested under this id in controls.yaml
+
+  - id: Image
+    evidence: unverified
+    catalog: paste-tested under this id in controls.yaml
+
+  - id: Label
+    evidence: unverified
+    catalog: paste-tested under this id in controls.yaml
+
+  - id: ListBox
+    evidence: unverified
+
+  - id: Microphone
+    evidence: unverified
+
+  - id: PDFViewer
+    evidence: unverified
+
+  - id: PowerBI
+    evidence: unverified
+
+  - id: Radio
+    evidence: unverified
+    catalog: controls.yaml has Classic/Radio, not bare Radio -- unresolved
+
+  - id: Rating
+    evidence: unverified
+
+  - id: Rectangle
+    evidence: unverified
+    catalog: paste-tested under this id in controls.yaml
+
+  - id: Slider
+    evidence: unverified
+
+  - id: StreamVideo
+    evidence: unverified
+
+  - id: TextInput
+    evidence: unverified
+    catalog: controls.yaml has Classic/TextInput, not bare TextInput -- unresolved
+
+  - id: Timer
+    evidence: unverified
+
+  - id: Toggle
+    evidence: unverified
+
+  - id: Video
+    evidence: unverified
+
+  - id: FluentV8/Button
+    evidence: unverified
+
+  - id: FluentV8/CheckBox
+    evidence: unverified
+
+  - id: FluentV8/ComboBox
+    evidence: unverified
+
+  - id: FluentV8/DatePicker
+    evidence: unverified
+
+  - id: FluentV8/Label
+    evidence: unverified
+
+  - id: FluentV8/Radio
+    evidence: unverified
+
+  - id: FluentV8/Rating
+    evidence: unverified
+
+  - id: FluentV8/Slider
+    evidence: unverified
+
+  - id: FluentV8/TextBox
+    evidence: unverified
+
+  - id: FluentV8/Toggle
+    evidence: unverified
+
+  - id: FluentV9/Badge
+    evidence: unverified
+
+  - id: FluentV9/Button
+    evidence: unverified
+
+  - id: FluentV9/CheckBox
+    evidence: unverified
+
+  - id: FluentV9/ComboBox
+    evidence: unverified
+
+  - id: FluentV9/DatePicker
+    evidence: unverified
+
+  - id: FluentV9/DropDown
+    evidence: unverified
+
+  - id: FluentV9/Header
+    evidence: unverified
+
+  - id: FluentV9/InfoButton
+    evidence: unverified
+
+  - id: FluentV9/Link
+    evidence: unverified
+
+  - id: FluentV9/NumberInput
+    evidence: unverified
+
+  - id: FluentV9/Progress
+    evidence: unverified
+
+  - id: FluentV9/Radio
+    evidence: unverified
+
+  - id: FluentV9/Slider
+    evidence: unverified
+
+  - id: FluentV9/Spinner
+    evidence: unverified
+
+  - id: FluentV9/StreamVideo
+    evidence: unverified
+
+  - id: FluentV9/TabList
+    evidence: unverified
+
+  - id: FluentV9/Text
+    evidence: unverified
+
+  - id: FluentV9/TextInput
+    evidence: unverified
+
+  - id: FluentV9/Toggle
+    evidence: unverified
+
+  - id: FluentV9/Grid
+    evidence: unverified
