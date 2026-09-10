@@ -87,7 +87,8 @@ power-app-yaml/
 ├── skills/power-app-yaml/            # the skill itself
 │   ├── SKILL.md                      # workflow, control picker, templates, checklist
 │   ├── references/
-│   │   ├── confirmed-controls.md     # the catalog — control types/properties proven in Studio
+│   │   ├── controls.yaml             # the catalog, machine-readable — source of truth
+│   │   ├── confirmed-controls.md     # the same catalog, human-readable
 │   │   └── schema-v3.pa.yaml         # Microsoft's official pa.yaml v3.0 schema (see NOTICE)
 │   └── assets/examples/
 │       ├── example-app-shell.yaml    # sidebar + top bar + page shell, with Navigate()
@@ -95,7 +96,10 @@ power-app-yaml/
 │       └── example-card-grid.yaml    # selectable card/checklist grid with a footer
 ├── .claude-plugin/                   # plugin + marketplace manifests
 ├── docs/                             # quickstart, troubleshooting
-├── scripts/validate.py              # repo sanity checks (run before a PR)
+├── scripts/
+│   ├── pa_lint.py                    # offline .pa.yaml verifier (L0-L3) — run before handing a file over
+│   └── validate.py                   # repo sanity checks (run before a PR)
+├── tests/                            # linter fixtures + unittest suite
 └── .github/                          # issue / PR templates, CI
 ```
 
