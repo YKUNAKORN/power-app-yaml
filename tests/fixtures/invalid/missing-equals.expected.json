@@ -1,0 +1,8 @@
+{
+  "description": "Property value 'Dashboard' is missing the leading '='. Schema pfx-formula requires ^=.*",
+  "expected_exit_code": 1,
+  "expected_verdict_code": "will_fail",
+  "expected_findings": [
+    {"layer": "L1", "check": "L1.formula-missing-equals"}
+  ]
+}

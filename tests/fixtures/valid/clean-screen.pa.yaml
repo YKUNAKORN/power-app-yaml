@@ -1,0 +1,62 @@
+# A minimal screen using only catalog-confirmed controls and properties.
+# Must produce ZERO findings at every layer.
+Screens:
+  Home:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - lblTitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Dashboard"
+            Color: =RGBA(24, 28, 35, 1)
+            Font: =Font.'Segoe UI'
+            Size: =26
+            X: =40
+            Y: =32
+            Width: =400
+            Height: =40
+      - grpCard:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderColor: =RGBA(193, 198, 215, 1)
+            BorderThickness: =1
+            X: =40
+            Y: =96
+            Width: =600
+            Height: =200
+          Children:
+            - rectAccent:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(0, 127, 250, 1)
+                  X: =0
+                  Y: =0
+                  Width: =4
+                  Height: =200
+      - btnGo:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="Open requests"
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(0, 127, 250, 1)
+            BorderStyle: =BorderStyle.None
+            OnSelect: =Navigate('Requests', ScreenTransition.Fade)
+            X: =40
+            Y: =320
+            Width: =200
+            Height: =48
+  Requests:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - lblRequests:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="My requests"
+            X: =40
+            Y: =32
+            Width: =400
+            Height: =40

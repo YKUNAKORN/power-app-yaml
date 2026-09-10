@@ -1,0 +1,8 @@
+{
+  "description": "'lblTitle' appears twice in screen Home (once nested). Studio would silently rename one.",
+  "expected_exit_code": 0,
+  "expected_verdict_code": "unverified",
+  "expected_findings": [
+    {"layer": "L3", "check": "L3.duplicate-control-name"}
+  ]
+}

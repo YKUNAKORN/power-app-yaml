@@ -1,0 +1,10 @@
+# Trap 1: a property value that does not start with '='.
+Screens:
+  Home:
+    Children:
+      - lblTitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: Dashboard
+            X: =40
+            Y: =32

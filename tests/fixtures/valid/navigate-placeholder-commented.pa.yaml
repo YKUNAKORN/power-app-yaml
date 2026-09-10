@@ -1,0 +1,14 @@
+# SKILL.md rule 7 allows a Navigate() placeholder as long as it is commented
+# as not wired up. The linter must detect the comment and stay silent.
+Screens:
+  Home:
+    Children:
+      - btnFuture:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="Coming soon"
+            OnSelect: =Navigate('Settings', ScreenTransition.Fade)  # placeholder - 'Settings' screen not built yet
+            X: =40
+            Y: =40
+            Width: =200
+            Height: =48

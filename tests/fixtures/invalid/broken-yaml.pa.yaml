@@ -1,0 +1,9 @@
+# Trap 3b: a genuine YAML syntax error (unterminated flow mapping), unrelated to RGBA.
+Screens:
+  Home:
+    Children:
+      - lblTitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Dashboard"
+  Broken: {a: 1

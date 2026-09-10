@@ -1,0 +1,20 @@
+# Trap 11: children using X/Y inside a container that is not ManualLayout. The
+# coordinates are ignored by auto-layout, so the screen silently mislays out.
+Screens:
+  Home:
+    Children:
+      - grpStack:
+          Control: GroupContainer@1.5.0
+          Variant: VerticalLayout
+          Properties:
+            X: =40
+            Y: =40
+            Width: =400
+            Height: =300
+          Children:
+            - lblOne:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="One"
+                  X: =8
+                  Y: =8
