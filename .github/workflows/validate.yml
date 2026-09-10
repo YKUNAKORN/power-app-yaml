@@ -17,7 +17,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install pyyaml jsonschema
 
       - name: Run repository checks
         run: python scripts/validate.py
+
+      - name: Run the linter test suite
+        run: python -m unittest discover tests

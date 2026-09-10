@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -53,6 +54,9 @@ check(schema.is_file(), "bundled Microsoft schema present",
       "references/schema-v3.pa.yaml is referenced by NOTICE and must not be removed")
 check((SKILL_DIR / "references" / "confirmed-controls.md").is_file(),
       "confirmed-controls.md present")
+check((SKILL_DIR / "references" / "controls.yaml").is_file(),
+      "controls.yaml present", "the machine-readable catalog scripts/pa_lint.py reads")
+check((ROOT / "scripts" / "pa_lint.py").is_file(), "scripts/pa_lint.py present")
 check(not (ROOT / "skill").exists(), "no stray top-level skill/ directory")
 check(not (ROOT / "confirmed-controls.md").exists(),
       "no duplicate confirmed-controls.md at repo root")
@@ -87,6 +91,70 @@ for ex in examples:
               f"{ex.name} parses and has a known top-level key", f"top-level key: {top!r}")
     except yaml.YAMLError as e:
         check(False, f"{ex.name} parses as YAML", str(e))
+
+print("Control catalog (controls.yaml <-> confirmed-controls.md)")
+catalog_path = SKILL_DIR / "references" / "controls.yaml"
+catalog = None
+if catalog_path.is_file():
+    try:
+        catalog = yaml.safe_load(catalog_path.read_text(encoding="utf-8"))
+        check(isinstance(catalog, dict), "controls.yaml parses as a YAML mapping")
+    except yaml.YAMLError as e:
+        check(False, "controls.yaml parses as YAML", str(e))
+
+if isinstance(catalog, dict):
+    for key in ("schema_version", "evidence_levels", "universal_properties", "controls"):
+        check(key in catalog, f"controls.yaml has '{key}'")
+
+    entries = catalog.get("controls") or []
+    check(all(isinstance(e, dict) and {"name", "type", "evidence"} <= set(e)
+              for e in entries),
+          "every catalog entry has name/type/evidence")
+
+    levels = set(catalog.get("evidence_levels") or [])
+    bad_evidence = sorted({e.get("evidence") for e in entries} - levels)
+    check(not bad_evidence, "every entry's evidence is a declared level",
+          f"unknown: {bad_evidence}")
+
+    # An entry without a source is an entry without evidence, which is the exact
+    # failure mode this project exists to prevent.
+    missing_source = [e.get("type") for e in entries if not str(e.get("source") or "").strip()]
+    check(not missing_source, "every catalog entry cites a source", f"missing: {missing_source}")
+
+    yaml_types = {e.get("type") for e in entries}
+
+    # Cross-check against the human-readable view: the two must not drift apart.
+    md_text = (SKILL_DIR / "references" / "confirmed-controls.md").read_text(encoding="utf-8")
+    section = md_text.split("## Control types", 1)[-1].split("\n## ", 1)[0]
+    control_id_re = re.compile(r"^[A-Z][A-Za-z0-9]*(?:/[A-Z][A-Za-z0-9]*)?@\d+\.\d+\.\d+$")
+    md_types = set()
+    for line in section.splitlines():
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 2:
+            continue
+        for token in re.findall(r"`([^`]+)`", cells[1]):
+            if control_id_re.match(token):
+                md_types.add(token)
+                break
+
+    check(bool(md_types), "confirmed-controls.md control table is parseable")
+    check(md_types <= yaml_types, "every control in confirmed-controls.md is in controls.yaml",
+          f"missing from controls.yaml: {sorted(md_types - yaml_types)}")
+    check(yaml_types <= md_types, "every control in controls.yaml is in confirmed-controls.md",
+          f"missing from the markdown: {sorted(yaml_types - md_types)}")
+
+print("Linter accepts the bundled examples")
+lint = ROOT / "scripts" / "pa_lint.py"
+if lint.is_file() and examples:
+    proc = subprocess.run(
+        [sys.executable, str(lint), *[str(p) for p in examples], "--quiet"],
+        capture_output=True, text=True, encoding="utf-8", cwd=str(ROOT),
+    )
+    check(proc.returncode == 0,
+          "pa_lint.py returns 0 for all three bundled examples",
+          f"exit {proc.returncode}\n{proc.stdout}\n{proc.stderr}")
 
 print("Plugin metadata")
 plugin_json = ROOT / ".claude-plugin" / "plugin.json"
