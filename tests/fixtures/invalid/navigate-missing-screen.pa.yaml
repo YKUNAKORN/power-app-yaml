@@ -1,0 +1,13 @@
+# Trap 8: Navigate() to a screen that does not exist in this file, with no placeholder comment.
+Screens:
+  Home:
+    Children:
+      - btnGo:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="Go"
+            OnSelect: =Navigate('Nowhere', ScreenTransition.Fade)
+            X: =40
+            Y: =40
+            Width: =200
+            Height: =48

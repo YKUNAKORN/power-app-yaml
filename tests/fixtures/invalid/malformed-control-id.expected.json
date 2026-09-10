@@ -1,0 +1,8 @@
+{
+  "description": "Control id 'label@2.5.1' violates the ControlTypeId pattern (must start uppercase).",
+  "expected_exit_code": 1,
+  "expected_verdict_code": "will_fail",
+  "expected_findings": [
+    {"layer": "L1", "check": "L1.invalid-control-id"}
+  ]
+}

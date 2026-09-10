@@ -1,0 +1,8 @@
+# Trap 5: lowercase control id. Must match ^([A-Z][a-zA-Z0-9]*/)?[A-Z][a-zA-Z0-9]*(@\d+\.\d+\.\d+)?$
+Screens:
+  Home:
+    Children:
+      - lblTitle:
+          Control: label@2.5.1
+          Properties:
+            Text: ="Dashboard"

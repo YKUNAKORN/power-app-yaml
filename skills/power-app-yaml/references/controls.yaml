@@ -1,0 +1,200 @@
+# Machine-readable control catalog for Power Apps Canvas .pa.yaml
+#
+# THIS FILE IS THE SINGLE SOURCE OF TRUTH.
+# `confirmed-controls.md` is the human-readable view of the same facts; when the two
+# disagree, fix both in the same commit.
+#
+# Consumed by `scripts/pa_lint.py` (layer L2) and cross-checked by `scripts/validate.py`.
+#
+# RULES FOR EDITING (see CONTRIBUTING.md):
+#   - Never move a property from `properties_unverified` to `properties_confirmed`
+#     without a Power Apps Studio test to cite in `source`.
+#   - Never add a control or property by analogy with HTML/CSS or with another
+#     Power Apps control. Evidence or nothing.
+#   - Anything absent from this file is UNVERIFIED by definition.
+
+schema_version: 1
+catalog_updated: "2026-09-10"
+
+# The Power Apps Studio build that produced the paste tests below.
+# `unknown` is deliberate: `confirmed-controls.md` names no build anywhere, so any
+# value here would be invented. Fill in from Studio -> ? -> About when known.
+studio_version_tested: unknown
+
+# Evidence levels, strongest first.
+#   studio-tested  - confirmed by pasting into Studio and reading back errors/exports.
+#   studio-export  - observed in a Studio "View code" export (see the caveat below).
+#   example-file   - observed working in a bundled assets/examples/ file. Strong, but
+#                    slightly weaker than a fresh isolated test, since a working screen
+#                    can still carry an unnoticed cosmetic error.
+#   unverified     - no evidence either way. Paste-test in isolation before trusting.
+evidence_levels: [studio-tested, studio-export, example-file, unverified]
+
+# Caveat carried over from confirmed-controls.md: Studio's "View code" only exports
+# properties that differ from their default. A property missing from an export does NOT
+# prove the control lacks it. Do not over-conclude from absence.
+
+# Accepted on every control tried so far.
+universal_properties: [X, Y, Width, Height, Fill, Visible]
+
+controls:
+  - name: Label
+    type: Label@2.5.1
+    evidence: studio-tested
+    source: "confirmed-controls.md - Studio paste test"
+    accepts_children: false
+    variant: null
+    properties_confirmed: [Text, Color, Font, Size, Align, FontWeight]
+    properties_example_file: []
+    properties_unverified: []
+    notes: "No prefix. FontWeight confirmed on Label only, not verified on Button."
+
+  - name: Button
+    type: Classic/Button@2.2.0
+    evidence: studio-tested
+    source: "confirmed-controls.md - Studio paste test"
+    accepts_children: false
+    variant: null
+    properties_confirmed:
+      [Text, Color, Fill, BorderColor, BorderStyle, BorderThickness,
+       FocusedBorderThickness,
+       DisabledColor, DisabledBorderColor, DisabledFill,
+       HoverColor, HoverBorderColor, HoverFill,
+       PressedColor, PressedBorderColor, PressedFill,
+       RadiusTopLeft, RadiusTopRight, RadiusBottomLeft, RadiusBottomRight,
+       OnSelect]
+    # Used on Buttons by all three bundled examples and by SKILL.md's own template 6,
+    # but absent from the confirmed-controls.md property list. Recorded at the weaker
+    # example-file level rather than promoted to confirmed.
+    properties_example_file: [Font, Size]
+    # confirmed-controls.md makes an explicit negative claim about FontWeight on Button
+    # ("confirmed on Label only, not verified on Button") while example-app-shell.yaml
+    # uses it on 5 Buttons. Unresolved contradiction - needs a Studio test.
+    properties_unverified: [FontWeight]
+    notes: >-
+      Has the Classic/ prefix. All sidebar/nav items must use this, never Label, even if
+      the mockup shows plain text - nav items need to be clickable/navigable.
+
+  - name: GroupContainer
+    type: GroupContainer@1.5.0
+    evidence: studio-tested
+    source: "confirmed-controls.md - Studio paste test"
+    accepts_children: true
+    variant: ManualLayout
+    properties_confirmed:
+      [Fill, Width, Height, Visible, BorderColor, BorderThickness,
+       RadiusTopLeft, RadiusTopRight, RadiusBottomLeft, RadiusBottomRight]
+    properties_example_file: []
+    properties_unverified: []
+    notes: >-
+      Free-position container. Holds children via a nested Children: key. Child X/Y are
+      relative to the container.
+
+  - name: Rectangle
+    type: Rectangle@2.3.0
+    evidence: studio-tested
+    source: "confirmed-controls.md - Studio paste test (pastes clean)"
+    accepts_children: false
+    variant: null
+    properties_confirmed: []
+    properties_example_file: []
+    properties_unverified: [RadiusTopLeft, RadiusTopRight, RadiusBottomLeft, RadiusBottomRight]
+    notes: "Rounded corners (Radius*) NOT verified - don't assume it supports them."
+
+  - name: Image
+    type: Image@2.2.3
+    evidence: studio-tested
+    source: "confirmed-controls.md - Studio paste test (pastes clean)"
+    accepts_children: false
+    variant: null
+    properties_confirmed: [Image]
+    properties_example_file: []
+    properties_unverified: []
+    notes: "Only Image/X/Y/Width/Height verified. Other properties unverified."
+
+  - name: Icon
+    type: Classic/Icon@2.5.0
+    evidence: studio-tested
+    source: "confirmed-controls.md - Studio paste test"
+    accepts_children: false
+    variant: null
+    properties_confirmed:
+      [Icon, Color, BorderColor,
+       DisabledColor, DisabledBorderColor, DisabledFill,
+       HoverColor, HoverBorderColor, HoverFill,
+       PressedColor, PressedBorderColor, PressedFill,
+       FocusedBorderThickness]
+    properties_example_file: []
+    properties_unverified: []
+    notes: >-
+      Must use this, not plain Icon (plain Icon at its current version does NOT support
+      Color). Icon is an enum, e.g. =Icon.CheckBadge.
+
+  - name: TextInput
+    type: Classic/TextInput@2.3.2
+    evidence: example-file
+    source: "assets/examples/example-form.yaml"
+    accepts_children: false
+    variant: null
+    properties_confirmed:
+      [BorderColor, BorderThickness, Color, Default, HintText,
+       RadiusTopLeft, RadiusTopRight, RadiusBottomLeft, RadiusBottomRight, Size]
+    properties_example_file: []
+    properties_unverified: []
+    notes: "Seen in example-form.yaml with the listed properties plus the universal ones."
+
+  - name: DropDown
+    type: Classic/DropDown@2.3.1
+    evidence: example-file
+    source: "assets/examples/example-form.yaml"
+    accepts_children: false
+    variant: null
+    properties_confirmed:
+      [BorderColor, BorderThickness, ChevronBackground, Color, Items, Items.Value, Size]
+    properties_example_file: []
+    properties_unverified: []
+    notes: 'Items takes an array literal, e.g. =["a","b"].'
+
+  - name: Radio
+    type: Classic/Radio@2.3.0
+    evidence: studio-tested
+    source: "confirmed-controls.md - Studio paste test (earlier session)"
+    accepts_children: false
+    variant: null
+    properties_confirmed: [Items]
+    properties_example_file: []
+    properties_unverified: []
+    notes: 'Items accepts array-literal syntax: =["a", "b"].'
+
+# No evidence either way. Do not assume property names carry over from a similar
+# control - propose a small isolated test snippet before using any of these.
+unattempted_controls: [Timer, Slider, DatePicker, Toggle, ComboBox, Gallery,
+                       DataTable, PDFViewer, Camera, Barcode]
+
+# CSS behaviours with no verified Power Fx equivalent. Say so plainly; do not fake a
+# property and do not silently drop the requirement.
+impossible_css:
+  - id: group-hover
+    substitute: null
+    note: >-
+      A child Label changing colour when a parent Button/container is hovered. Label and
+      Button are separate controls that don't share hover state. A workaround via
+      Button.Value / mouse-position formulas exists but is substantially more complex -
+      flag it as "possible but not yet confirmed" rather than doing it silently.
+  - id: box-shadow
+    substitute: null
+    note: "No confirmed Power Fx equivalent, on hover or otherwise."
+  - id: backdrop-blur
+    substitute: null
+    note: "No confirmed Power Fx equivalent."
+  - id: css-transition
+    substitute: null
+    note: "CSS transitions / animations have no confirmed Power Fx equivalent."
+  - id: border-left-only
+    substitute: "A thin Rectangle positioned along the edge."
+    note: "One-sided borders (e.g. border-left only) are not supported directly."
+  - id: non-segoe-font
+    substitute: null
+    note: >-
+      Whether a non-Font.'Segoe UI' font actually renders on the target machine is
+      unverified either way.

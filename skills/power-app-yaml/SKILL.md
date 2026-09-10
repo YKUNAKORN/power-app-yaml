@@ -42,9 +42,13 @@ before trusting them.** Cleverness is not required; discipline is.
 2. **Open the closest example** in `assets/examples/` and copy its structure (see the picker below).
 3. **Decompose the mockup** into controls, pulling real values (text, hex colors, sizes, X/Y).
 4. **Write the full `.pa.yaml`** using the templates in this file. Tag anything unconfirmed.
-5. **Hand the whole file to the user to paste**, plus any isolated test snippet for unconfirmed bits.
-6. **Read back the Studio result** (error, warning, or screenshot) and fix only what broke.
-7. **If a Studio test confirms something new**, record it in `confirmed-controls.md`.
+5. **Verify it offline before anyone sees it.** Run `python scripts/pa_lint.py <file>`. Do not hand
+   the file over while any L0/L1 error remains. Report every remaining L2/L3 warning to the user
+   verbatim as the UNVERIFIED list, together with the generated isolated test snippets.
+6. **Hand the whole file to the user to paste**, plus any isolated test snippet for unconfirmed bits.
+7. **Read back the Studio result** (error, warning, or screenshot) and fix only what broke.
+8. **If a Studio test confirms something new**, record it in `confirmed-controls.md` — and in
+   `references/controls.yaml`, which is the machine-readable source of truth the linter reads.
 
 ---
 
@@ -283,6 +287,7 @@ hard-won test results live only in chat history.
 
 ## Pre-send checklist (run through this before replying)
 
+- [ ] `python scripts/pa_lint.py <file>` run, and **zero L0/L1 errors** remain
 - [ ] Full `Screens: -> name -> Children` wrapper present
 - [ ] Every property value starts with `=`
 - [ ] Properties are block-style (no `{ }` with commas)

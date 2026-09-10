@@ -1,0 +1,8 @@
+{
+  "description": "Bare control at the document root. The root allows only App/Screens/ComponentDefinitions/DataSources/EditorState.",
+  "expected_exit_code": 1,
+  "expected_verdict_code": "will_fail",
+  "expected_findings": [
+    {"layer": "L1", "check": "L1.unknown-root-key"}
+  ]
+}

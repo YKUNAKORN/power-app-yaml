@@ -1,0 +1,26 @@
+# Trap 9: the same control name used twice within one screen. Studio silently
+# auto-renames on paste, so this never errors - it just quietly diverges.
+Screens:
+  Home:
+    Children:
+      - lblTitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="One"
+            X: =40
+            Y: =32
+      - grpCard:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =40
+            Y: =100
+            Width: =400
+            Height: =200
+          Children:
+            - lblTitle:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Two"
+                  X: =8
+                  Y: =8

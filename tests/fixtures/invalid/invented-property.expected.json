@@ -1,0 +1,9 @@
+{
+  "description": "BoxShadow is not a confirmed Label property and is untagged.",
+  "expected_exit_code": 0,
+  "expected_verdict_code": "unverified",
+  "expected_findings": [
+    {"layer": "L2", "check": "L2.unverified-property"},
+    {"layer": "L3", "check": "L3.missing-unverified-comment"}
+  ]
+}

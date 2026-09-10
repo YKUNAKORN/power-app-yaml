@@ -1,0 +1,8 @@
+{
+  "description": "Navigate target 'Nowhere' is not a key under Screens: and is not commented as a placeholder.",
+  "expected_exit_code": 0,
+  "expected_verdict_code": "unverified",
+  "expected_findings": [
+    {"layer": "L3", "check": "L3.navigate-target-missing"}
+  ]
+}

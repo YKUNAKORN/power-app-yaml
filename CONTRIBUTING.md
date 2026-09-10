@@ -29,7 +29,17 @@ Example of a good catalog entry:
 | `Classic/DropDown@2.3.1` | `ChevronBackground` | ✅ Confirmed | Studio 3.24102.x — pasted cleanly, no warning |
 ```
 
-## Editing the catalog (`confirmed-controls.md`)
+## Editing the catalog (`controls.yaml` + `confirmed-controls.md`)
+
+The catalog lives in **two files that must be edited together**:
+
+| File | Role |
+|---|---|
+| `references/controls.yaml` | machine-readable source of truth — what `scripts/pa_lint.py` reads |
+| `references/confirmed-controls.md` | the human-readable view of the same facts |
+
+`scripts/validate.py` fails if a control appears in one file but not the other, so a PR
+touching only the Markdown will not pass CI.
 
 - **Never** move an item from "unverified" to "confirmed" without a Studio test to cite.
 - Keep the empirical tone: say *which Studio version* confirmed it.
@@ -45,11 +55,25 @@ Example of a good catalog entry:
 
 ```bash
 python scripts/validate.py
+python -m unittest discover tests
+```
+
+Both need `pyyaml` and `jsonschema`:
+
+```bash
+pip install pyyaml jsonschema
+```
+
+To check a `.pa.yaml` you are working on:
+
+```bash
+python scripts/pa_lint.py path/to/screen.pa.yaml
 ```
 
 ## Pull request checklist
 
 - [ ] `python scripts/validate.py` passes
+- [ ] `python -m unittest discover tests` passes
 - [ ] Catalog changes cite a Studio version
 - [ ] `CHANGELOG.md` updated under `## [Unreleased]`
 - [ ] If behaviour changed, `plugin.json` `version` bumped (SemVer)
