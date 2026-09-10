@@ -1,0 +1,8 @@
+{
+  "description": "'Propertie' is not an allowed key on a control instance.",
+  "expected_exit_code": 1,
+  "expected_verdict_code": "will_fail",
+  "expected_findings": [
+    {"layer": "L1", "check": "L1.unexpected-key"}
+  ]
+}

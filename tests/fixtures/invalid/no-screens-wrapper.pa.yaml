@@ -1,0 +1,7 @@
+# Trap 2: a bare control pasted at the document root, with no Screens: wrapper.
+lblTitle:
+  Control: Label@2.5.1
+  Properties:
+    Text: ="Dashboard"
+    X: =40
+    Y: =32

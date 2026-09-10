@@ -1,0 +1,9 @@
+{
+  "description": "Unverified control type, untagged. Must warn at L2 and flag the missing # UNVERIFIED comment at L3.",
+  "expected_exit_code": 0,
+  "expected_verdict_code": "unverified",
+  "expected_findings": [
+    {"layer": "L2", "check": "L2.unverified-control-type"},
+    {"layer": "L3", "check": "L3.missing-unverified-comment"}
+  ]
+}

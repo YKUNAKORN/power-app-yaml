@@ -1,0 +1,8 @@
+# Trap 4: a misspelled structural key. Control-instance is additionalProperties: false.
+Screens:
+  Home:
+    Children:
+      - lblTitle:
+          Control: Label@2.5.1
+          Propertie:
+            Text: ="Dashboard"

@@ -1,0 +1,6 @@
+{
+  "description": "Only catalog-confirmed controls and properties; Navigate target exists. Zero findings.",
+  "expected_exit_code": 0,
+  "expected_verdict_code": "safe",
+  "expected_findings": []
+}

@@ -1,0 +1,9 @@
+# Trap 3: flow-style Properties containing RGBA(). This PARSES, but the commas
+# inside RGBA(...) are read as YAML separators, so the data is silently corrupted
+# into {Fill: '=RGBA(255', 255: None, ...}. Must be caught by raw-text scan.
+Screens:
+  Home:
+    Children:
+      - lblTitle:
+          Control: Label@2.5.1
+          Properties: {Text: ="Dashboard", Fill: =RGBA(255, 255, 255, 1)}

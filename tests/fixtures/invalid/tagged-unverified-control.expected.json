@@ -1,0 +1,8 @@
+{
+  "description": "A tagged unverified control still warns at L2 but must not fire the L3 comment check.",
+  "expected_exit_code": 0,
+  "expected_verdict_code": "unverified",
+  "expected_findings": [
+    {"layer": "L2", "check": "L2.unverified-control-type"}
+  ]
+}

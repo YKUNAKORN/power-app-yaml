@@ -1,0 +1,8 @@
+{
+  "description": "Unterminated flow mapping. Must report a parse error with line and column, not a traceback.",
+  "expected_exit_code": 1,
+  "expected_verdict_code": "will_fail",
+  "expected_findings": [
+    {"layer": "L0", "check": "L0.yaml-parse"}
+  ]
+}

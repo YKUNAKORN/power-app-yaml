@@ -1,0 +1,12 @@
+# Trap 7: a property that does not exist on a real control. The schema accepts any
+# property name (Properties-formula-map), so only the catalog can catch this.
+Screens:
+  Home:
+    Children:
+      - lblTitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Dashboard"
+            BoxShadow: ="0 2px 4px rgba(0,0,0,.2)"
+            X: =40
+            Y: =32

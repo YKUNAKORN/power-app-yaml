@@ -1,0 +1,8 @@
+{
+  "description": "Flow-style Properties with RGBA(). Parses but corrupts; must be reported as a blocking L0 error.",
+  "expected_exit_code": 1,
+  "expected_verdict_code": "will_fail",
+  "expected_findings": [
+    {"layer": "L0", "check": "L0.flow-style-rgba"}
+  ]
+}
