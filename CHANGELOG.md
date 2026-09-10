@@ -36,10 +36,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Known issues
 - `controls.yaml` records `studio_version_tested: unknown` — `confirmed-controls.md`
   names no Studio build, so no honest value exists yet.
-- Linting the bundled examples surfaces 22 pre-existing warnings (0 errors): 11
+- Linting the bundled examples surfaces 22 pre-existing warnings and 0 errors: 12
   `Navigate()` calls to screens outside their own single-screen file, 5 uses of
   `FontWeight` on `Classic/Button` that contradict the catalog's explicit "not verified
-  on Button" note, and the 6 untagged-item warnings that follow from them. Left as-is
+  on Button" note, and the 5 untagged-item warnings that follow from those. Left as-is
   because the example files are out of scope for this phase.
 
 ## [0.1.0] - 2026-08-27
