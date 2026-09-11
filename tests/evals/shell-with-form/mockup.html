@@ -1,0 +1,138 @@
+<!doctype html>
+<!-- Eval fixture: shell chrome and form fields on ONE screen, with a two-column
+     split and a summary panel that is NOT a form. Self-contained: no CDN, no
+     webfont, no image file.
+
+     The point of the case is the seam. The sidebar wants absolute coordinates from
+     a fixed-position box; the form column wants them from a wrapping flex grid; the
+     summary panel wants them from a stack of rows. All three have to land in the
+     same coordinate space without overlapping. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book equipment</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; background: #f4f4f6;
+         width: 1366px; height: 768px; overflow: hidden; }
+
+  /* --- shell ------------------------------------------------------------- */
+  .sidebar { position: absolute; left: 0; top: 0; width: 280px; height: 768px;
+             background: #fff; }
+  .logo { height: 32px; margin: 32px 24px 0; font-size: 24px; font-weight: 700;
+          color: #007ffa; text-align: center; line-height: 32px; }
+  .nav { position: absolute; top: 104px; left: 0; width: 280px; }
+  .nav a { display: block; height: 48px; line-height: 48px; padding-left: 56px;
+           font-size: 16px; color: #414754; text-decoration: none; position: relative; }
+  .nav a .ico { position: absolute; left: 16px; top: 12px; width: 24px; height: 24px;
+                border-radius: 6px; background: #c1c6d7; }
+  .nav a.active { background: #cce4f6; color: #007ffa; }
+  .nav a.active::before { content: ""; position: absolute; left: 0; top: 0;
+                          width: 4px; height: 48px; background: #007ffa; }
+  .topbar { position: absolute; left: 280px; top: 0; width: 1086px; height: 64px;
+            background: #fff; }
+  .user { position: absolute; right: 80px; top: 12px; text-align: right; }
+  .user .name { font-size: 14px; font-weight: 700; color: #181c23; }
+  .user .role { font-size: 12px; color: #414754; }
+  .avatar { position: absolute; right: 24px; top: 12px; width: 40px; height: 40px;
+            border-radius: 20px; background: #c1c6d7; }
+
+  /* --- two-column body --------------------------------------------------- */
+  .body { position: absolute; left: 304px; top: 96px; width: 1038px;
+          display: flex; gap: 24px; }
+  .col-main { width: 686px; }
+  .col-side { width: 328px; }
+
+  h1 { font-size: 26px; font-weight: 700; color: #181c23; margin-bottom: 16px; }
+
+  .card { background: #fff; border: 1px solid #c1c6d7; border-radius: 8px;
+          padding: 24px; margin-bottom: 24px; }
+  .card h2 { font-size: 16px; font-weight: 700; color: #181c23; margin-bottom: 16px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 16px 24px; }
+  .field { width: 307px; }
+  .field.full { width: 638px; }
+  label { display: block; font-size: 12px; color: #414754; margin-bottom: 6px; }
+  input, select { width: 100%; height: 40px; padding: 0 12px; font-size: 14px;
+                  color: #181c23; border: 1px solid #c1c6d7; border-radius: 6px;
+                  background: #fff; }
+
+  /* Summary rows are read-only text, not fields. A conversion that turns these
+     into inputs has misread the screen. */
+  .summary .line { display: flex; justify-content: space-between; height: 28px;
+                   font-size: 14px; color: #414754; line-height: 28px; }
+  .summary .line b { color: #181c23; }
+  .summary .rule { height: 1px; background: #c1c6d7; margin: 12px 0; }
+  .summary .total { font-size: 16px; font-weight: 700; color: #181c23; }
+
+  .actions { width: 686px; text-align: right; }
+  button { height: 40px; padding: 0 24px; font-size: 14px; border-radius: 6px;
+           margin-left: 12px; }
+  .ghost   { background: transparent; border: 1px solid #c1c6d7; color: #414754; }
+  .primary { background: #007ffa; border: 1px solid #007ffa; color: #fff; }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="logo">Team Portal</div>
+  <div class="nav">
+    <a href="#home"><span class="ico"></span>Home</a>
+    <a href="#requests"><span class="ico"></span>Requests</a>
+    <a class="active" href="#equipment"><span class="ico"></span>Equipment</a>
+    <a href="#settings"><span class="ico"></span>Settings</a>
+  </div>
+</nav>
+
+<header class="topbar">
+  <div class="user">
+    <div class="name">Avery Lang</div>
+    <div class="role">Operations</div>
+  </div>
+  <div class="avatar"></div>
+</header>
+
+<div class="body">
+  <div class="col-main">
+    <h1>Book equipment</h1>
+
+    <section class="card">
+      <h2>What you need</h2>
+      <div class="grid">
+        <div class="field"><label>Item</label>
+          <select><option>Laptop</option><option>Monitor</option><option>Headset</option></select>
+        </div>
+        <div class="field"><label>Quantity</label><input placeholder="1"></div>
+        <div class="field full"><label>Reason</label><input placeholder="Short justification"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Where and when</h2>
+      <div class="grid">
+        <div class="field"><label>Collection site</label>
+          <select><option>Leeds HQ</option><option>Manchester</option></select>
+        </div>
+        <div class="field"><label>Needed by</label><input placeholder="2026-10-01"></div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button class="ghost">Cancel</button>
+      <button class="primary">Send for approval</button>
+    </div>
+  </div>
+
+  <aside class="col-side">
+    <section class="card summary">
+      <h2>Summary</h2>
+      <div class="line"><span>Item</span><b>Laptop</b></div>
+      <div class="line"><span>Quantity</span><b>1</b></div>
+      <div class="line"><span>Site</span><b>Leeds HQ</b></div>
+      <div class="rule"></div>
+      <div class="line total"><span>Approvals needed</span><b>2</b></div>
+    </section>
+  </aside>
+</div>
+
+</body>
+</html>

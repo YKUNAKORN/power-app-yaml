@@ -31,9 +31,11 @@ templates so the model fills in blanks instead of inventing schema.
 - [Install](#install)
 - [Use it](#use-it)
 - [Repository layout](#repository-layout)
+- [Verify before you paste](#verify-before-you-paste)
 - [Working with an app that already exists](#working-with-an-app-that-already-exists)
 - [The paste-test kit](#the-paste-test-kit)
 - [Keep the catalog honest](#keep-the-catalog-honest)
+- [Telling better output from worse](#telling-better-output-from-worse)
 - [What it can't do (honestly)](#what-it-cant-do-honestly)
 - [Contributing](#contributing)
 - [Attribution](#attribution)
@@ -105,11 +107,17 @@ Full walkthrough: [`docs/quickstart.md`](docs/quickstart.md).
 1. Give Claude an HTML mockup (Google Stitch / v0 / Figma export) or a screenshot and ask it to
    "convert this to pa.yaml".
 2. Claude reads the catalog, picks the matching patterns, derives the coordinates, writes
-   the full `.pa.yaml`, lints it offline, and hands it back.
+   the full `.pa.yaml`, **lints it offline** (`scripts/pa_lint.py`), and hands it back with
+   the verdict and any unverified items spelled out.
 3. In Power Apps Studio, on a **blank screen**, use **Paste code** and paste the whole file.
+   If the hand-off came with isolated paste-test snippets, paste those on a scratch screen
+   first — a one-control file fails in a way you can attribute.
 4. If Studio reports an error or warning, paste it back. Which codes block a paste (`PA1001` /
-   `PA2108`) and which are harmless version warnings (`PA2105` / `PA2106`) is covered in
+   `PA2108`), which are harmless version warnings (`PA2105` / `PA2106`), and what each of the
+   linter's four verdict lines means are covered in
    [`docs/troubleshooting.md`](docs/troubleshooting.md).
+
+Full walkthrough with the lint step: [`docs/quickstart.md`](docs/quickstart.md).
 
 ## Repository layout
 
@@ -134,19 +142,54 @@ power-app-yaml/
 │           ├── example-form.yaml         # multi-section form: TextInput + DropDown in cards
 │           └── example-card-grid.yaml    # selectable card/checklist grid with a footer
 ├── .claude-plugin/                   # plugin + marketplace manifests
-├── docs/                             # quickstart, troubleshooting, harvesting, test plan
+├── docs/                             # quickstart, troubleshooting, harvesting, test plan, evals
 ├── scripts/
 │   ├── pa_lint.py                    # offline .pa.yaml verifier (L0-L3) — run before handing a file over
+│   ├── run_eval.py                   # score a produced .pa.yaml against an eval case
 │   ├── app_inventory.py              # one-page summary of an existing app (.pa.yaml folder / .msapp)
 │   ├── harvest_controls.py           # grow the catalog from real Studio exports (.pa.yaml / .msapp)
 │   └── validate.py                   # repo sanity checks (run before a PR)
-├── tests/                            # linter fixtures, the 10-screen app fixture, unittest suite
+├── tests/
+│   ├── fixtures/                     # linter fixtures with .expected.json sidecars
+│   ├── apps/ten-screen-app/          # synthetic 171-control app, for app_inventory.py
+│   ├── evals/                        # 5 eval cases: mockup.html + expectations.yaml + notes.md
+│   └── test_*.py                     # the unittest suite
 └── .github/                          # issue / PR templates, CI
 ```
 
 The three example screens are **real, working** `.pa.yaml` files (generic sample content).
 `assets/patterns/` holds the reusable pieces extracted from them — start there, and drop
 to an example slice only when a pattern doesn't cover the case.
+
+## Verify before you paste
+
+`scripts/pa_lint.py` is the step that stops the user acting as the compiler. It runs
+offline, in four layers, and ends in a verdict:
+
+```bash
+python scripts/pa_lint.py myscreen.pa.yaml
+```
+
+| Layer | Severity | Checks | Studio equivalent |
+|---|---|---|---|
+| **L0** | error | the file parses as YAML | a paste that silently does nothing |
+| **L1** | error | Microsoft's bundled v3.0 schema | `PA1001` — blocks the whole paste |
+| **L2** | warning | this repo's control catalog | `PA2108` — unknown control or property |
+| **L3** | warning | SKILL.md's own conventions | **nothing** |
+
+L3 is the layer with no Studio counterpart, and it is where the expensive failures
+live: a duplicate control name is silently renamed to `_1` on paste, so the names you
+wrote and the names in the app quietly diverge. Nothing errors. The app is just wrong.
+
+Four verdicts are possible — `SAFE TO PASTE`, `PASTES, BUT n UNVERIFIED ITEM(S)`,
+`WILL FAIL`, and `UNPROVEN` (which is what you get when `jsonschema` is not installed
+and the layer that catches `PA1001` never ran; reporting "safe" there would be a claim
+the run cannot back up). Each one, and what to do about it, is in
+[`docs/troubleshooting.md`](docs/troubleshooting.md#the-linters-verdict-lines).
+
+The linter is an approximation of Studio, built from the bundled schema and a catalog
+of paste-tested controls. Where the two disagree, Studio is right — and that
+disagreement is worth reporting, because it is how the catalog grows.
 
 ## Working with an app that already exists
 
@@ -210,12 +253,48 @@ control lacks it** — so the harvester only ever makes positive claims, and nev
 support" list. Full walkthrough, both extraction routes, and the review checklist:
 [`docs/harvesting.md`](docs/harvesting.md).
 
+## Telling better output from worse
+
+The linter proves a file will paste. It cannot tell you whether the screen is the one
+the mockup showed, and it cannot tell you whether an edit to `SKILL.md` helped or hurt.
+[`tests/evals/`](tests/evals/) and `scripts/run_eval.py` are the part that can.
+
+Five cases, each a small self-contained `mockup.html`, an `expectations.yaml` of
+mechanically checkable assertions, and a `notes.md` saying what the case is meant to
+stress: **app shell**, **multi-section form**, **card grid**, **mixed shell + form**,
+and a deliberately hard one built entirely from effects listed under `impossible_css`
+— which has no right conversion, only a right disclosure.
+
+```bash
+python scripts/run_eval.py out.pa.yaml --case tests/evals/app-shell
+```
+
+**The boundary is the important part.** This scores a `.pa.yaml` that already exists.
+Producing that file means running a model, and CI does not run a model — there is
+deliberately no API-key step in the scorer and none in the workflow, because a harness
+that quietly depended on a key would be green on every run where the key was missing.
+So the loop is manual and has three steps: ask Claude for a case's mockup, save the
+answer, run the scorer. The whole procedure, including what the harness *cannot* see,
+is in [`docs/evals.md`](docs/evals.md).
+
+What CI does run is the half that needs no model: `python scripts/run_eval.py` with no
+arguments scores the three bundled example screens against their matching cases. That
+proves the scorer works. It proves nothing about the skill — the examples were written
+by hand, not generated — and the tool says so on every run.
+
 ## What it can't do (honestly)
 
 Some CSS effects have no verified Power Fx equivalent: box shadows, `backdrop-blur`, CSS
-transitions/animations, `group-hover`, and true one-sided borders. The skill will tell you plainly
+transitions/animations, `group-hover`, true one-sided borders, and any non-`Segoe UI` font. The
+full list is `impossible_css` in
+[`controls.yaml`](skills/power-app-yaml/references/controls.yaml). The skill will tell you plainly
 and suggest the closest practical substitute (e.g. a thin `Rectangle` for a left border) rather than
-faking a property or silently dropping the requirement.
+faking a property or silently dropping the requirement — and the `impossible-effects` eval case
+exists to check that it actually does.
+
+Beyond that: nothing here renders anything, so colours, fonts and visual hierarchy are
+never verified automatically; and the linter is an approximation of Studio, not Studio.
+Only a real paste test settles a control.
 
 ## Contributing
 

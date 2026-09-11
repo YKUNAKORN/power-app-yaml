@@ -22,5 +22,13 @@ jobs:
       - name: Run repository checks
         run: python scripts/validate.py
 
-      - name: Run the linter test suite
+      - name: Run the test suite
         run: python -m unittest discover tests
+
+      # Scores the three bundled example screens against their matching eval cases.
+      # Deliberately NO API key: this step checks the scorer, not the skill. Generating
+      # output means running a model, which this workflow does not do -- see
+      # docs/evals.md. A step that quietly needed a key would be green on every run
+      # where the key happened to be missing.
+      - name: Score the bundled references (eval self-check)
+        run: python scripts/run_eval.py

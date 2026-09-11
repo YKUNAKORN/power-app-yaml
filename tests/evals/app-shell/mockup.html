@@ -1,0 +1,92 @@
+<!doctype html>
+<!-- Eval fixture: app shell with a persistent sidebar.
+     Self-contained on purpose: no CDN, no webfont, no image file. Every avatar and
+     icon is a CSS shape, so the file scores the same on a machine with no network. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Team Portal — Home</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; background: #f4f4f6;
+         width: 1366px; height: 768px; overflow: hidden; }
+  .sidebar { position: absolute; left: 0; top: 0; width: 280px; height: 768px;
+             background: #fff; }
+  .logo { height: 32px; margin: 32px 24px 0; font-size: 24px; font-weight: 700;
+          color: #007ffa; text-align: center; line-height: 32px; }
+  .nav { position: absolute; top: 104px; left: 0; width: 280px; }
+  .nav a { display: block; height: 48px; line-height: 48px; padding-left: 56px;
+           font-size: 16px; color: #414754; text-decoration: none; position: relative; }
+  .nav a .ico { position: absolute; left: 16px; top: 12px; width: 24px; height: 24px;
+                border-radius: 6px; background: #c1c6d7; }
+  .nav a.active { background: #cce4f6; color: #007ffa; }
+  .nav a.active::before { content: ""; position: absolute; left: 0; top: 0;
+                          width: 4px; height: 48px; background: #007ffa; }
+
+  .topbar { position: absolute; left: 280px; top: 0; width: 1086px; height: 64px;
+            background: #fff; }
+  .user { position: absolute; right: 24px; top: 12px; text-align: right; }
+  .user .name { font-size: 14px; font-weight: 700; color: #181c23; }
+  .user .role { font-size: 12px; color: #414754; }
+  .avatar { position: absolute; right: -64px; top: 0; width: 40px; height: 40px;
+            border-radius: 20px; background: #c1c6d7; }
+
+  .headline { position: absolute; left: 280px; top: 120px; width: 1086px;
+              text-align: center; }
+  .headline h1 { font-size: 26px; font-weight: 700; color: #181c23; height: 34px; }
+  .headline p  { font-size: 14px; color: #414754; margin-top: 8px; height: 20px; }
+
+  .progress { position: absolute; left: 623px; top: 190px; display: flex; gap: 8px; }
+  .progress i { display: block; width: 48px; height: 4px; background: #c1c6d7; }
+  .progress i.on { background: #007ffa; }
+
+  .tiles { position: absolute; left: 387px; top: 247px; width: 872px; }
+  .tile { float: left; width: 420px; height: 128px; margin: 0 32px 27px 0;
+          background: #fff; border: 1px solid #c1c6d7; border-radius: 8px;
+          font-size: 16px; color: #181c23; line-height: 128px; text-align: center;
+          cursor: pointer; }
+  .tile:nth-child(2n) { margin-right: 0; }
+
+  .cta { position: absolute; left: 623px; top: 560px; width: 200px; height: 40px;
+         border: 1px solid #007ffa; border-radius: 6px; background: transparent;
+         color: #007ffa; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="logo">Team Portal</div>
+  <div class="nav">
+    <a class="active" href="#home"><span class="ico"></span>Home</a>
+    <a href="#requests"><span class="ico"></span>Requests</a>
+    <a href="#reports"><span class="ico"></span>Reports</a>
+    <a href="#settings"><span class="ico"></span>Settings</a>
+  </div>
+</nav>
+
+<header class="topbar">
+  <div class="user">
+    <div class="name">Avery Lang</div>
+    <div class="role">Operations</div>
+    <div class="avatar"></div>
+  </div>
+</header>
+
+<section class="headline">
+  <h1>Start a new request</h1>
+  <p>Pick a template to begin. You can change it later.</p>
+</section>
+
+<div class="progress"><i class="on"></i><i></i><i></i></div>
+
+<section class="tiles">
+  <button class="tile">Time off</button>
+  <button class="tile">Expense claim</button>
+  <button class="tile">Equipment</button>
+  <button class="tile">Something else</button>
+</section>
+
+<button class="cta">Browse all templates</button>
+
+</body>
+</html>

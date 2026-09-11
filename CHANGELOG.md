@@ -7,6 +7,156 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-11
+
+Phase 5: make it possible to tell whether a change to the skill made output better or
+worse -- and ship.
+
+The first four phases each made the output more likely to be right: a catalog of what
+actually pastes (0.2.0), an offline linter that proves it before the user sees it
+(0.2.0), a harvester that grows the catalog from real exports (0.3.0), a pattern library
+and a real geometry algorithm (0.4.0), and the branches for an app that already exists
+and for data binding (0.5.0). None of them could answer the question that matters when
+you edit `SKILL.md`: **did that help?** This release answers it, within a boundary it
+states plainly rather than papering over.
+
+### Added
+- `tests/evals/` -- **five eval cases**, each a directory of three files: a small,
+  self-contained `mockup.html` (no CDN, no webfont, no image file -- a fixture that
+  needs the network is not a fixture), an `expectations.yaml` of assertions that can be
+  settled mechanically on whatever `.pa.yaml` the skill produces, and a `notes.md`
+  saying in prose what the case is meant to stress and which specific wrong answer it
+  is there to catch.
+  - `app-shell` -- persistent chrome. Nav rows drawn as plain text that must become
+    `Classic/Button`s anyway (SKILL.md rule 5); a 4 x 48 active indicator that is a
+    one-sided border by another name; `Navigate()` targets that cannot exist in a
+    single-screen file and must therefore be commented.
+  - `multi-section-form` -- `<select>` vs `<input>` fidelity, which is invisible in a
+    rendered mockup and silently loses the constrained choice when got wrong; five
+    structurally identical cards that must not be abbreviated; content running to
+    ~2032px, so the screen has to declare `Height:`.
+  - `card-grid` -- seventeen rows that all have to be there, per-row selection state,
+    and `Gallery` forbidden precisely because it is the answer a Power Apps developer
+    would reach for and the one this repo has no evidence for.
+  - `shell-with-form` -- the seam. Sidebar coordinates from a fixed box, form
+    coordinates from a wrapping flex grid, summary-panel coordinates from a stack of
+    rows, all landing in one coordinate space; and read-only summary text that must not
+    become editable fields.
+  - `impossible-effects` -- **the deliberately hard one.** Every effect in the mockup is
+    listed under `impossible_css` in `controls.yaml`: `box-shadow`, `backdrop-filter:
+    blur`, CSS transitions, `group-hover`, `border-left` only, and a non-Segoe font.
+    There is no right conversion, only a right disclosure, and the case separates the
+    three ways to get it wrong -- fake it (an invented `BoxShadow:`), drop it silently,
+    or declare it and offer the sanctioned substitute.
+- `scripts/run_eval.py` -- the scorer.
+  - `python scripts/run_eval.py OUTPUT.pa.yaml --case tests/evals/<name>` checks the
+    file against that case and prints a pass/fail table. `--case` is required with an
+    output file; the scorer never guesses which case a file belongs to.
+  - Seven optional assertion blocks -- `structure`, `lint`, `controls`, `geometry`,
+    `navigation`, `catalog`, `limitations`. Anything a case leaves out is reported
+    `SKIP`, never assumed.
+  - **Every count is a range.** Two good conversions of one mockup will not agree on
+    control count, so an exact number would score style rather than correctness. Each
+    range carries a comment giving its derivation from the mockup.
+  - Six results, and three of them are not failures: `PASS`, `FAIL`, `XFAIL` (a
+    deviation the case declared in advance, with a reason), `XPASS` (a declared
+    deviation that stopped failing -- the waiver is stale, and this counts as a failure
+    so it cannot be ignored), `UNPROVEN` (the evidence could not be gathered -- almost
+    always `jsonschema` missing, which disables the layer that catches `PA1001`), and
+    `SKIP`.
+  - Geometry is resolved through the control tree, so a child's `X`/`Y` are measured
+    against its ancestors, and a screen's own `Height:` overrides the canvas height --
+    a screen that correctly declares it scrolls is not punished for it. A value that is
+    not a plain number (`Width: =Parent.Width - 40`) is **counted, never guessed at**:
+    placing it would mean evaluating Power Fx, which this tool does not do.
+  - The catalog assertions reuse `pa_lint.py`'s own L2/L3 findings rather than
+    reimplementing "an unverified item with no `# UNVERIFIED` comment", so the linter
+    and the scorer cannot drift apart.
+- `docs/evals.md` -- the manual loop, the table legend, what a case asserts, how to
+  compare two runs, how to add a case, and a section titled **what the harness cannot
+  see**: it renders nothing, so colour, font and visual hierarchy are unmeasured; it is
+  not Studio, so only a paste test settles a control; and prose the model writes in chat
+  is not in the file and cannot be scored.
+- `tests/test_run_eval.py` -- 24 tests, mostly negative: an abbreviated screen fails on
+  count and not on parse, a control past the canvas edge fails on geometry, the same
+  control on a screen that declares a taller `Height` does not, a dangling `Navigate()`
+  fails while a commented one passes, a file that will not parse produces exactly one
+  `FAIL` row and not fifteen, and each of the three failure modes in the hard case lands
+  on its own row. Plus the acceptance criterion as an assertion, and a test that the
+  "not model-generated" disclaimer is still printed.
+- `scripts/validate.py` -- eval-case checks, each negative-tested: all five archetypes
+  present; every case has its three files; every mockup is self-contained; every
+  `expectations.yaml` parses and asserts at least three blocks; **every known deviation
+  states a reason** (a waiver nobody can read is indistinguishable from a bug); every
+  reference output resolves; every `limitations.declared` id is one `controls.yaml`
+  actually takes a position on; and `run_eval.py` is executed against the bundled
+  references with the result asserted clean.
+
+### Changed
+- **`docs/quickstart.md` now has the lint step**, as step 4 of 6, with the four-layer
+  table and the note that `jsonschema` is what separates `SAFE TO PASTE` from
+  `UNPROVEN`. Also: the branch for an app that already exists, pasting the isolated
+  snippets before the main file, and pointers to harvesting and evals.
+- **`docs/troubleshooting.md` now explains the linter's verdict lines** alongside the
+  PA-code table, and opens by separating the two sources of truth -- the linter is an
+  approximation of Studio built from the bundled schema and this repo's catalog, and
+  where they disagree Studio is right. Added: the four-layer table with the observation
+  that L3 has *no* Studio counterpart and is therefore where the expensive silent
+  failures live; why `PASTES, BUT n UNVERIFIED ITEM(S)` is not a failure; why `UNPROVEN`
+  is deliberately not `SAFE`; and new entries for a control renamed to `_1`, a
+  non-`ManualLayout` container ignoring child `X`/`Y`, and pasting into an app that
+  already exists.
+- `README.md` -- new sections "Verify before you paste" and "Telling better output from
+  worse"; the repository layout now shows `tests/` broken out; the `impossible_css`
+  paragraph names the full list and its file; and "what it can't do" now also admits
+  that nothing renders and the linter is not Studio.
+- `CONTRIBUTING.md` -- a section saying that a change to `SKILL.md`, the catalog or the
+  patterns needs a before-and-after eval run in the PR, and the same as a checklist item.
+- `.github/workflows/validate.yml` -- runs `python scripts/run_eval.py` as its own step.
+  **No API key, by design**: the scored half needs no model, and a workflow that quietly
+  depended on a key would be green on every run where the key was missing.
+- **The three bundled examples gained comments, and nothing else.** Twelve `Navigate()`
+  lines now say on the line that the target is not a screen in this file (SKILL.md rule
+  7), and five `FontWeight` properties on `Classic/Button` in `example-app-shell.yaml`
+  are tagged `# UNVERIFIED` (rule 8). This clears 17 of the 22 warnings recorded as a
+  known issue in 0.2.0. The change is comment-only -- no geometry, no property values,
+  no line-count change -- so the line ranges in `INDEX.md` and the patterns extracted
+  from these files are unaffected. It matters because a model reading an example copies
+  what it sees, including an uncommented dangling `Navigate()`.
+  - `example-form.yaml` and `example-card-grid.yaml` now lint **SAFE TO PASTE**.
+- `plugin.json` version 0.5.0 -> 1.0.0.
+
+### Fixed
+- `LICENSE` needed no change: the copyright line has read
+  `Copyright (c) 2026 YKUNAKORN (https://github.com/YKUNAKORN)` since the repackaging
+  commit, and the README sentence that once said to fill it in was removed in that same
+  commit. Recorded here because the phase brief expected a placeholder and there is not
+  one.
+
+### Known issues
+- **`FontWeight` on `Classic/Button` is still unresolved.** `controls.yaml` confirms it
+  on `Label` only and marks it explicitly unverified on `Button`;
+  `example-app-shell.yaml` uses it on five Buttons. Tagging them settles the *labelling*
+  question, not the *evidence* question -- the file still lints
+  `PASTES, BUT 5 UNVERIFIED ITEM(S)`, and the `app-shell` eval case carries three
+  declared deviations because of it. One Studio paste test settles all of it; delete the
+  waivers when it does.
+- **The scorer cannot see whether the screen looks like the mockup.** Nothing renders.
+  Colours, fonts, alignment and visual hierarchy are unmeasured, and a conversion with
+  every control in the right place and the wrong palette scores full marks. Stated in
+  `docs/evals.md` under "what the harness cannot see" rather than left to be discovered.
+- **The reference outputs are not model output.** The three bundled examples were
+  hand-written long before this harness and are used only so the scorer can be exercised
+  in CI. A green self-check proves the assertions run; it says nothing about the skill's
+  output quality, and `run_eval.py` prints that on every run.
+- **A limitation declared in chat rather than in the file scores `FAIL`.** The scorer
+  reads the `.pa.yaml`, and a `#` comment is the only channel a `.pa.yaml` has. This is
+  a real limit of the harness, and it is also the behaviour worth having: whoever pastes
+  the file in six months has the file, not the conversation.
+- All twelve rows of `docs/test-plan.md` remain empty, `controls.yaml` is byte-identical
+  to 0.3.0, and `studio_version_tested` is still `unknown`. Nothing in this phase could
+  be confirmed against Studio, because nothing in this phase touched Studio.
+
 ## [0.5.0] - 2026-09-11
 
 Phase 4: make the skill useful on an app that already exists, and prepare -- without
@@ -341,7 +491,8 @@ hardest part of the job — turning HTML/CSS into absolute X/Y.
   `SUPPORT`, GitHub issue/PR templates.
 - CI: `scripts/validate.py` and `.github/workflows/validate.yml`.
 
-[Unreleased]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/YKUNAKORN/power-app-yaml/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.5.0...v1.0.0
 [0.5.0]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.2.0...v0.3.0

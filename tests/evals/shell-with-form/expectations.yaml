@@ -1,0 +1,58 @@
+# Eval case: shell-with-form
+#
+# Scored by:  python scripts/run_eval.py OUTPUT.pa.yaml --case tests/evals/shell-with-form
+# See notes.md for what this case stresses, docs/evals.md for how to run it.
+#
+# There is no reference output for this case. Nothing in the repo is a conversion of
+# this mockup, and inventing one would mean hand-writing the answer and then scoring
+# it against itself. Run it by hand against real model output.
+
+case: shell-with-form
+title: "Shell chrome and form fields on one screen, in two columns"
+mockup: mockup.html
+
+canvas:
+  width: 1366
+  height: 768
+
+structure:
+  screens: {min: 1, max: 1}
+  required_screen_properties: [Fill]
+  # Deliberately NOT requiring Height: the mockup fits 768px, so a screen that
+  # declares a Height has misread the layout. in_bounds catches that instead.
+
+lint:
+  verdict: [safe]
+  max_errors: 0
+  max_warnings: 0
+
+controls:
+  total: {min: 30, max: 90}
+  required_types: [Label, Classic/Button, GroupContainer, Classic/TextInput,
+                   Classic/DropDown]
+  by_type:
+    Label:              {min: 14, max: 40}
+    Classic/TextInput:  {min: 3, max: 8}    # 3 <input>: quantity, reason, needed-by
+    Classic/DropDown:   {min: 2, max: 5}    # 2 <select>: item, collection site
+    GroupContainer:     {min: 3, max: 10}   # sidebar + top bar + 3 cards
+    Classic/Button:     {min: 5, max: 14}   # 4 nav rows + 2 actions
+    Rectangle:          {min: 0, max: 14}
+    Classic/Icon:       {min: 0, max: 10}
+    Image:              {min: 0, max: 3}
+  forbidden_types: [Gallery, Form, DataTable]
+
+geometry:
+  # This is the assertion the case is really about. Sidebar coordinates come from a
+  # fixed box, the form column's from a wrapping flex grid, and the summary panel's
+  # from a stack of rows -- three different derivations landing in one coordinate
+  # space. A column that overflows or a panel that overlaps the form shows up here.
+  in_bounds: true
+  max_unresolved: 0
+
+navigation:
+  count: {min: 1}
+  targets_resolve: true
+
+catalog:
+  max_untagged_unverified: 0
+  max_unverified_properties: 0
