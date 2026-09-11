@@ -1,0 +1,42 @@
+# PATTERN   badge
+# What      A small filled square with a number or short string centred in it -- the
+#           step marker on each card of the form example.
+# Controls  Rectangle@2.3.0, Label@2.5.1
+# Source    assets/examples/example-form.yaml L33-L53
+# Evidence  studio-tested (both control types); example-file (this composition)
+# Geometry  32 x 32 at the card's padding origin (X: =32, Y: =32). The Label sits at
+#           the SAME X/Y/Width/Height as the Rectangle and centres its text with
+#           Align: =Align.Center.
+# Note      The source gives BOTH controls a Fill, so the Label's fill is what you
+#           actually see and the Rectangle is redundant in that file. Kept here
+#           because the Rectangle is the general mechanism for a coloured block --
+#           a Label alone works if you only need one flat colour. Rectangle's
+#           Radius* is UNVERIFIED, so a pill/circle badge is not available today.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+    Children:
+      - recBadge:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(0, 114, 228, 1)
+            X: =32
+            Y: =32
+            Width: =32
+            Height: =32
+      - lblBadgeNumber:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="1"
+            Align: =Align.Center
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(0, 127, 250, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Size: =16
+            X: =32
+            Y: =32
+            Width: =32
+            Height: =32

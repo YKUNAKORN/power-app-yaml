@@ -1,0 +1,43 @@
+# PATTERN   top-bar
+# What      The white header strip to the right of the sidebar: a GroupContainer that
+#           spans the remaining canvas width and holds the user cluster.
+# Controls  GroupContainer@1.5.0 (Variant: ManualLayout), Label@2.5.1
+# Source    assets/examples/example-app-shell.yaml L156-L181
+# Evidence  studio-tested (both control types); example-file (this composition)
+# Geometry  X: =280 (= sidebar width), Width: =1086 (= 1366 - 280), Height: =64, Y: =0.
+#           Child X/Y are relative to the container, so the name Label's X: =724 is
+#           724px from the container's left edge -- 1004px from the screen's.
+# See also  avatar-row for the name + role + avatar cluster that fills this bar.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpTopBar:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            X: =280
+            Y: =0
+            Width: =1086
+            Height: =64
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+          Children:
+            - lblUserName:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Alex Taylor"
+                  Align: =Align.Right
+                  Color: =RGBA(24, 28, 35, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =14
+                  X: =724
+                  Y: =13
+                  Width: =295
+                  Height: =20

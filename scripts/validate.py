@@ -19,6 +19,28 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SKILL_DIR = ROOT / "skills" / "power-app-yaml"
 
+# --- Budgets -----------------------------------------------------------------
+# SKILL.md is loaded into context on every single invocation, so its size is a
+# running cost, not a one-off. Everything that is not procedure belongs in
+# README.md or a references/ file that is read on demand.
+SKILL_MD_MAX_BYTES = 8192
+# The frontmatter description is what makes the skill fire. It has to keep every
+# distinct trigger phrase, which is why the ceiling is a ceiling and not a target:
+# trim justification prose, never a trigger.
+DESCRIPTION_MAX_CHARS = 650
+DESCRIPTION_MIN_CHARS = 40
+# Pattern snippets exist to be read instead of a 1,700-line example, so they stay
+# small. tile-grid-cell is an acknowledged exception: it is a six-control
+# composite (card, title, subtitle, checkbox, check icon, click overlay) and
+# cutting it to 60 lines would mean dropping the selection mechanic that is the
+# whole reason to extract it.
+PATTERN_MAX_LINES = 60
+PATTERN_MAX_LINES_EXCEPTIONS = {"tile-grid-cell.pa.yaml": 90}
+PATTERN_MIN_LINES = 20
+# Every pattern file opens with these header fields, so a reader knows what it is
+# and -- crucially -- where the evidence for it came from.
+PATTERN_HEADER_FIELDS = ("PATTERN", "What", "Controls", "Source", "Evidence")
+
 errors: list[str] = []
 checks = 0
 
@@ -56,6 +78,14 @@ check((SKILL_DIR / "references" / "confirmed-controls.md").is_file(),
       "confirmed-controls.md present")
 check((SKILL_DIR / "references" / "controls.yaml").is_file(),
       "controls.yaml present", "the machine-readable catalog scripts/pa_lint.py reads")
+check((SKILL_DIR / "references" / "layout-mapping.md").is_file(),
+      "layout-mapping.md present",
+      "the HTML/CSS -> X/Y/Width/Height reference SKILL.md step 3 sends the model to")
+check((SKILL_DIR / "assets" / "patterns").is_dir(),
+      "assets/patterns/ present", "the extracted pattern snippets SKILL.md step 2 uses")
+check((SKILL_DIR / "assets" / "examples" / "INDEX.md").is_file(),
+      "assets/examples/INDEX.md present",
+      "the line-range index that lets a slice be read instead of a whole example")
 check((ROOT / "scripts" / "pa_lint.py").is_file(), "scripts/pa_lint.py present")
 check((ROOT / "scripts" / "harvest_controls.py").is_file(),
       "scripts/harvest_controls.py present",
@@ -84,8 +114,36 @@ if skill_md.is_file():
         check(fm.get("name") == "power-app-yaml",
               "frontmatter name is 'power-app-yaml'", f"got {fm.get('name')!r}")
         desc = fm.get("description")
-        check(isinstance(desc, str) and len(desc.strip()) >= 40,
+        check(isinstance(desc, str) and len(desc.strip()) >= DESCRIPTION_MIN_CHARS,
               "frontmatter has a substantive 'description'")
+        if isinstance(desc, str):
+            n = len(desc.strip())
+            check(n <= DESCRIPTION_MAX_CHARS,
+                  f"frontmatter description is within {DESCRIPTION_MAX_CHARS} chars",
+                  f"got {n}. Cut justification sentences, never a trigger phrase -- "
+                  "the triggers are what make the skill fire.")
+
+print("SKILL.md size budget")
+if skill_md.is_file():
+    size = len(skill_md.read_bytes())
+    check(size <= SKILL_MD_MAX_BYTES,
+          f"SKILL.md is within {SKILL_MD_MAX_BYTES} bytes",
+          f"got {size} ({size - SKILL_MD_MAX_BYTES} over). SKILL.md is procedure only: "
+          "move rationale to README.md and detail to references/.")
+    body = skill_md.read_text(encoding="utf-8")
+    # The things SKILL.md must never lose while being shrunk.
+    for needle, label in (
+        ("## The workflow", "the ordered workflow"),
+        ("## Control picker", "the control picker table"),
+        ("## Templates", "the templates"),
+        ("## Rules while writing", "the rules list"),
+        ("## Pre-send checklist", "the pre-send checklist"),
+        ("assets/patterns/", "a pointer to assets/patterns/"),
+        ("layout-mapping.md", "a pointer to layout-mapping.md"),
+        ("INDEX.md", "a pointer to the example INDEX.md"),
+        ("pa_lint.py", "the lint step"),
+    ):
+        check(needle in body, f"SKILL.md still contains {label}", f"missing {needle!r}")
 
 print("Example screens are valid YAML")
 examples = sorted((SKILL_DIR / "assets" / "examples").glob("*.yaml"))
@@ -196,6 +254,135 @@ if lint.is_file() and examples:
     check(proc.returncode == 0,
           "pa_lint.py returns 0 for all three bundled examples",
           f"exit {proc.returncode}\n{proc.stdout}\n{proc.stderr}")
+
+
+def lint_json(paths):
+    """Run pa_lint.py over paths and return its JSON report, or None."""
+    if not lint.is_file() or not paths:
+        return None
+    proc = subprocess.run(
+        [sys.executable, str(lint), *[str(x) for x in paths], "--json"],
+        capture_output=True, text=True, encoding="utf-8", cwd=str(ROOT),
+    )
+    try:
+        return json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        check(False, "pa_lint.py --json produced parseable output",
+              f"exit {proc.returncode}\n{proc.stdout[-2000:]}\n{proc.stderr[-2000:]}")
+        return None
+
+
+print("Pattern snippets (assets/patterns/)")
+patterns = sorted((SKILL_DIR / "assets" / "patterns").glob("*.pa.yaml"))
+check(len(patterns) >= 10, "assets/patterns/ holds the extracted snippets",
+      f"found {len(patterns)}")
+
+for pat in patterns:
+    src = pat.read_text(encoding="utf-8")
+    lines = src.splitlines()
+    header = "\n".join(ln for ln in lines if ln.startswith("#"))
+    missing = [f for f in PATTERN_HEADER_FIELDS if f"# {f}" not in header]
+    check(not missing, f"{pat.name} header records {'/'.join(PATTERN_HEADER_FIELDS)}",
+          f"missing: {missing}. A pattern without a cited Source and Evidence level is "
+          "an unsourced claim, which is the failure mode this repo exists to prevent.")
+    # The Source field has to name a real bundled example -- patterns are extracted,
+    # never invented.
+    cites = [ex.name for ex in examples if ex.name in header]
+    check(bool(cites), f"{pat.name} cites a bundled example as its source",
+          "no assets/examples/*.yaml filename appears in the header")
+    cap = PATTERN_MAX_LINES_EXCEPTIONS.get(pat.name, PATTERN_MAX_LINES)
+    check(PATTERN_MIN_LINES <= len(lines) <= cap,
+          f"{pat.name} is {PATTERN_MIN_LINES}-{cap} lines",
+          f"got {len(lines)}. Patterns are read instead of a 1,700-line example; "
+          "split it or move detail into the header comment.")
+
+report = lint_json(patterns)
+if report:
+    for f in report.get("files", []):
+        name = Path(f["path"]).name
+        check(f.get("verdict_code") == "safe",
+              f"{name} lints SAFE TO PASTE",
+              f"{f.get('verdict')}: "
+              + "; ".join(x["message"] for x in f.get("findings", [])))
+
+print("layout-mapping.md recommends only catalogued properties")
+layout_md = SKILL_DIR / "references" / "layout-mapping.md"
+if layout_md.is_file() and isinstance(catalog, dict):
+    entries = catalog.get("controls") or []
+    # Every property name the catalog knows about, at any evidence level. An
+    # unverified property is still a real property; an absent one is an invention.
+    known = set(catalog.get("universal_properties") or [])
+    for e in entries:
+        for key in ("properties_confirmed", "properties_example_file",
+                    "properties_unverified"):
+            known |= set(e.get(key) or [])
+    # Not properties, but legitimately written in backticks: the .pa.yaml structural
+    # keys, the control base names, and the Variant values -- all derived from the
+    # catalog itself rather than hand-listed, so they cannot drift.
+    structural = {"Screens", "Properties", "Children", "Control", "Variant",
+                  "App", "ComponentDefinitions"}
+    for e in entries:
+        structural.add(str(e.get("name")))
+        structural.add(str(e.get("type")).split("@", 1)[0].rsplit("/", 1)[-1])
+        if e.get("variant"):
+            structural.add(str(e["variant"]))
+    vocabulary = known | structural
+
+    def resolves(token: str) -> bool:
+        """True if token is a catalogued property, a structural key, or a Prop* stem."""
+        if token in vocabulary:
+            return True
+        if token.endswith("*"):
+            stem = token[:-1]
+            return any(k.startswith(stem) for k in vocabulary)
+        return False
+
+    for md in (layout_md, skill_md):
+        prose = re.sub(r"(?ms)^```.*?^```", "", md.read_text(encoding="utf-8"))
+        offenders = set()
+        for span in set(re.findall(r"`([^`\n]+)`", prose)):
+            # "Name: =value" -- unambiguously a property being written.
+            assigned = re.match(r"^([A-Za-z][A-Za-z0-9.]*\*?)\s*:", span)
+            if assigned:
+                if not resolves(assigned.group(1)):
+                    offenders.add(assigned.group(1))
+                continue
+            # A bare multi-word CamelCase identifier reads as a property name
+            # (LayoutGap, PaddingTop, DropShadow, FillPortions...). Single-word
+            # tokens are too ambiguous to flag -- they are just as likely prose.
+            if re.match(r"^(?:[A-Z][a-z0-9]+){2,}\*?$", span) and not resolves(span):
+                offenders.add(span)
+        check(not offenders,
+              f"{md.name} names no property absent from controls.yaml",
+              f"not in the catalog: {sorted(offenders)}. Either add it to "
+              "controls.yaml with a cited Studio test, or stop recommending it.")
+
+print("layout-mapping.md's worked example lints clean")
+if layout_md.is_file():
+    blocks = re.findall(r"(?ms)^```yaml\n(.*?)^```", layout_md.read_text(encoding="utf-8"))
+    check(bool(blocks), "layout-mapping.md contains a worked .pa.yaml example")
+    tmp = ROOT / ".validate-tmp"
+    written = []
+    try:
+        if blocks:
+            tmp.mkdir(exist_ok=True)
+            for i, block in enumerate(blocks):
+                f = tmp / f"layout-mapping-block-{i}.pa.yaml"
+                f.write_text(block, encoding="utf-8")
+                written.append(f)
+        rep = lint_json(written)
+        if rep:
+            for f in rep.get("files", []):
+                check(f.get("verdict_code") == "safe",
+                      f"layout-mapping.md worked example ({Path(f['path']).name}) "
+                      "lints SAFE TO PASTE",
+                      f"{f.get('verdict')}: "
+                      + "; ".join(x["message"] for x in f.get("findings", [])))
+    finally:
+        for f in written:
+            f.unlink(missing_ok=True)
+        if tmp.is_dir():
+            tmp.rmdir()
 
 print("Plugin metadata")
 plugin_json = ROOT / ".claude-plugin" / "plugin.json"

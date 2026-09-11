@@ -1,0 +1,40 @@
+# PATTERN   divider
+# What      A thin Rectangle used as a rule or accent bar. Horizontal (wide x 4) and
+#           vertical (4 x tall) both shown.
+# Controls  Rectangle@2.3.0
+# Source    assets/examples/example-app-shell.yaml L225-L232 (recDot1, 48 x 4),
+#           L50-L56 (recNavActiveIndicator, 4 x 48)
+# Evidence  studio-tested (Rectangle pastes clean); example-file (these dimensions)
+#
+# HONEST SCOPE -- read this before using it as a section rule.
+#   The 4px thin-Rectangle MECHANISM is extracted verbatim. The ROLE is generalised:
+#   no bundled example contains a full-width horizontal divider. In the examples this
+#   shape is a progress-bar segment (48 x 4) and a nav active-indicator (4 x 48).
+#   Only the Width/Height are being extrapolated, and the control and its properties
+#   are unchanged, so the paste risk is nil -- but the visual precedent is not there.
+#
+# Geometry  A CSS 1px border-t maps to Height: =1; the examples use 4 for a visible
+#           accent. Rectangle has only the universal properties confirmed (X, Y,
+#           Width, Height, Fill, Visible) -- no Radius*, no BorderColor.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+    Children:
+      - recDividerHorizontal:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(193, 198, 215, 1)
+            X: =304
+            Y: =200
+            Width: =1038
+            Height: =1
+      - recAccentBarVertical:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(0, 127, 250, 1)
+            X: =0
+            Y: =104
+            Width: =4
+            Height: =48

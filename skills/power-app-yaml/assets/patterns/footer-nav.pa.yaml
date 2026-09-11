@@ -1,0 +1,59 @@
+# PATTERN   footer-nav
+# What      A footer strip with a secondary (outlined) and a primary (filled) button.
+# Controls  GroupContainer@1.5.0 (Variant: ManualLayout), Classic/Button@2.2.0 (x2)
+# Source    assets/examples/example-form.yaml L844-L903
+# Evidence  studio-tested (both types); example-file (this composition)
+# Geometry  Bar spans the content area: X: =280, Width: =1086, Height: =80. Child
+#           X/Y are container-relative. Buttons 48 tall at Y: =16 ((80 - 48) / 2);
+#           right edge 882 + 180 = 1062 (24px inset); gap 882 - (704 + 150) = 28.
+# Also in   the source: a status Label at X: =24, Y: =28, Size: =14, Color:
+#           =RGBA(65, 71, 84, 1). example-card-grid.yaml L1671-L1708 puts the same
+#           two buttons straight on the screen at Y: =2144, with Navigate() on each.
+# Styling   Secondary = accent BorderColor + Color on white Fill; primary =
+#           BorderStyle.None + white Color + accent Fill.
+# Corners   The source sets all four Radius*: =0 on both buttons; omitted here for
+#           length -- add them whenever the mockup wants guaranteed square corners.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpFooter:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            X: =280
+            Y: =688
+            Width: =1086
+            Height: =80
+          Children:
+            - btnSecondary:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Text: ="Save as draft"
+                  BorderColor: =RGBA(0, 127, 250, 1)
+                  BorderThickness: =1
+                  Color: =RGBA(0, 127, 250, 1)
+                  Fill: =RGBA(255, 255, 255, 1)
+                  HoverBorderColor: =ColorValue("#007FFA")
+                  HoverFill: =ColorValue("#007FFA")
+                  PressedBorderColor: =ColorValue("#007FFA")
+                  PressedFill: =ColorValue("#007FFA")
+                  X: =704
+                  Y: =16
+                  Width: =150
+                  Height: =48
+            - btnPrimary:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Text: ="Export to PDF"
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =1
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(0, 127, 250, 1)
+                  X: =882
+                  Y: =16
+                  Width: =180
+                  Height: =48

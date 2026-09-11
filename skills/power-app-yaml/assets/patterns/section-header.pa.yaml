@@ -1,0 +1,41 @@
+# PATTERN   section-header
+# What      A heading plus its one-line subheading -- the two Labels that open a page
+#           or a major section.
+# Controls  Label@2.5.1 (x2)
+# Source    assets/examples/example-card-grid.yaml L7-L28 (left-aligned),
+#           assets/examples/example-app-shell.yaml L201-L224 (Align.Center variant)
+# Evidence  studio-tested (Label); example-file (sizes, spacing, colour pairing)
+# Geometry  Heading Size: =26 Bold, subheading Size: =12, 40px apart (Y 99 -> 139 in
+#           the source). Heading has no explicit Height in the source; the subheading
+#           carries Height: =28. Both share the content column's X and Width.
+# Centered  variant adds Align: =Align.Center to both and widens them to the content
+#           area, so the text centres inside its own box rather than on the screen.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - lblSectionTitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Select Templates"
+            Color: =RGBA(24, 28, 35, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Size: =26
+            X: =323
+            Y: =99
+            Width: =1000
+            Height: =40
+      - lblSectionSubtitle:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Select one or more templates to include in your request."
+            Color: =RGBA(65, 71, 84, 1)
+            Font: =Font.'Segoe UI'
+            Size: =12
+            X: =323
+            Y: =139
+            Width: =1000
+            Height: =28

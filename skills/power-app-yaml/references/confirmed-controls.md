@@ -108,6 +108,19 @@ thin `Rectangle` for a one-sided border) rather than quietly dropping it or inve
 - One-sided borders (e.g. `border-left` only) — approximate with a thin `Rectangle`.
 - Whether non-`Font.'Segoe UI'` fonts actually render on the target machine — unverified either way.
 
+## Linter warnings about a control type
+
+`scripts/pa_lint.py` raises one of two L2 warnings when it meets a control type it cannot
+vouch for. They differ only in wording, never in what you must do about it.
+
+| Check | Means | What to do |
+|---|---|---|
+| `L2.unverified-control-type` | Not in the catalog, and not in Microsoft's control-id enum either. | Treat as a guess. Tag `# UNVERIFIED`, hand over the isolated snippet. |
+| `L2.candidate-control-type` | The id appears in Microsoft's first-party control-id enum (`control-ids-candidate.yaml`) but has never been paste-tested here. | Identical treatment. It is still a guess about *this* Studio build, and it says nothing at all about the control's properties. Never present it as confirmed. |
+
+Neither is evidence. `control-ids-candidate.yaml` is a wording aid: every entry in it is
+marked `evidence: unverified`, and none may be promoted without a Studio test.
+
 ## Error vs warning behavior when pasting
 
 - **Errors** (e.g. `PA2108` unknown property, `PA1001` invalid schema) — **block the entire paste**.

@@ -1,0 +1,57 @@
+# PATTERN   two-column-split
+# What      Two equal columns of fields inside one card -- the Power Apps equivalent
+#           of grid grid-cols-2 gap-4 inside a p-8 card.
+# Controls  GroupContainer@1.5.0 (Variant: ManualLayout), Label@2.5.1 (x2)
+# Source    assets/examples/example-form.yaml L17-L119 (Card1: four fields, 2 x 2)
+# Evidence  studio-tested (both control types); example-file (this arithmetic)
+#
+# THE ARITHMETIC (card Width 1038, padding 32, gutter 16):
+#   inner   = 1038 - 2 * 32          = 974
+#   column  = (974 - 16) / 2         = 479
+#   col 1 X = 32
+#   col 2 X = 32 + 479 + 16          = 527
+#   right edge check: 527 + 479      = 1006 = 1038 - 32   OK
+# Generalise: column = (W - 2*pad - (n-1)*gap) / n, and
+#             column k's X = pad + (k-1) * (column + gap).
+# Rows advance by 88 (label 20 + input 48 + 20 breathing room): Y = 96, 184, 272 ...
+# See references/layout-mapping.md for the grid and flex derivations in full.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpCard:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderColor: =RGBA(193, 198, 215, 1)
+            BorderThickness: =1
+            X: =304
+            Y: =168
+            Width: =1038
+            Height: =288
+          Children:
+            - lblColumnOne:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Full Name"
+                  Color: =RGBA(65, 71, 84, 1)
+                  Font: =Font.'Segoe UI'
+                  Size: =12
+                  X: =32
+                  Y: =96
+                  Width: =479
+                  Height: =20
+            - lblColumnTwo:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Email Address"
+                  Color: =RGBA(65, 71, 84, 1)
+                  Font: =Font.'Segoe UI'
+                  Size: =12
+                  X: =527
+                  Y: =96
+                  Width: =479
+                  Height: =20
