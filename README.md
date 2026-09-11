@@ -31,6 +31,8 @@ templates so the model fills in blanks instead of inventing schema.
 - [Install](#install)
 - [Use it](#use-it)
 - [Repository layout](#repository-layout)
+- [Working with an app that already exists](#working-with-an-app-that-already-exists)
+- [The paste-test kit](#the-paste-test-kit)
 - [Keep the catalog honest](#keep-the-catalog-honest)
 - [What it can't do (honestly)](#what-it-cant-do-honestly)
 - [Contributing](#contributing)
@@ -119,28 +121,70 @@ power-app-yaml/
 │   │   ├── controls.yaml             # the catalog, machine-readable — source of truth
 │   │   ├── confirmed-controls.md     # the same catalog, human-readable
 │   │   ├── layout-mapping.md         # HTML/CSS geometry → absolute X/Y/Width/Height
+│   │   ├── extend-existing-app.md    # the branch for adding a screen to an app that exists
+│   │   ├── data-binding.md           # SharePoint / Gallery / Patch / forms — all UNVERIFIED
 │   │   ├── control-ids-candidate.yaml  # Microsoft's control-id enum, mirrored — all unverified
 │   │   └── schema-v3.pa.yaml         # Microsoft's official pa.yaml v3.0 schema (see NOTICE)
 │   └── assets/
 │       ├── patterns/                 # 13 small extracted snippets, all lint-clean
+│       ├── test-snippets/            # 12 one-control paste tests for UNVERIFIED controls
 │       └── examples/
 │           ├── INDEX.md              # per-example description, control counts, line ranges
 │           ├── example-app-shell.yaml    # sidebar + top bar + page shell, with Navigate()
 │           ├── example-form.yaml         # multi-section form: TextInput + DropDown in cards
 │           └── example-card-grid.yaml    # selectable card/checklist grid with a footer
 ├── .claude-plugin/                   # plugin + marketplace manifests
-├── docs/                             # quickstart, troubleshooting, harvesting
+├── docs/                             # quickstart, troubleshooting, harvesting, test plan
 ├── scripts/
 │   ├── pa_lint.py                    # offline .pa.yaml verifier (L0-L3) — run before handing a file over
+│   ├── app_inventory.py              # one-page summary of an existing app (.pa.yaml folder / .msapp)
 │   ├── harvest_controls.py           # grow the catalog from real Studio exports (.pa.yaml / .msapp)
 │   └── validate.py                   # repo sanity checks (run before a PR)
-├── tests/                            # linter fixtures + unittest suite
+├── tests/                            # linter fixtures, the 10-screen app fixture, unittest suite
 └── .github/                          # issue / PR templates, CI
 ```
 
 The three example screens are **real, working** `.pa.yaml` files (generic sample content).
 `assets/patterns/` holds the reusable pieces extracted from them — start there, and drop
 to an example slice only when a pattern doesn't cover the case.
+
+## Working with an app that already exists
+
+Adding a screen to a real app fails in ways a blank canvas cannot: a control name that
+collides is silently renamed to `_1`, a `Navigate()` goes to a screen that was never
+there, and the palette gets hard-coded a second time next to the theme variables
+`App.OnStart` already defines. All three are silent — the paste succeeds and the app is
+subtly wrong.
+
+```bash
+python scripts/app_inventory.py <Src-folder-or-.msapp>
+```
+
+About a page: screens in editor order, controls per screen with nesting depth, the
+control types **with the versions that app uses**, the `App.OnStart` variables with
+their literal values, the `DataSources:` entries, the components, and every name already
+taken. The export itself is tens of thousands of tokens of property values nobody is
+going to read, so the tool has a hard byte budget and drops to coarser detail rather
+than overflowing it; `--json` and `--names` are the unbudgeted escape hatches. The
+procedure that uses it is
+[`references/extend-existing-app.md`](skills/power-app-yaml/references/extend-existing-app.md).
+
+## The paste-test kit
+
+Gallery, Form, DataTable, Toggle, DatePicker, ComboBox, Slider, Timer, CheckBox,
+HtmlText and the modern layout containers are **not** in the catalog, and this repo has
+no evidence about any of them. Guessing is what the project exists to avoid, so instead
+[`assets/test-snippets/`](skills/power-app-yaml/assets/test-snippets/) holds one
+single-control file per control, each a complete `Screens:` wrapper with one property per
+line so a failure can be bisected by deleting lines. Results go in
+[`docs/test-plan.md`](docs/test-plan.md), and only a real Studio result puts a control in
+the catalog.
+
+The layout containers are the honest gap: Microsoft's own control-id enum lists
+`GroupContainer` and no `Container` / `HorizontalContainer` / `VerticalContainer`, while
+community guides use a bare `Container`. Rather than pick one, the kit ships both
+hypotheses with the unknown part marked as a placeholder, and says the cheapest test is
+to insert a container in Studio and read its own code back.
 
 ## Keep the catalog honest
 

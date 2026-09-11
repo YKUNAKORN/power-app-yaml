@@ -1,0 +1,67 @@
+# SNIPPET   container-auto-layout-a-variant.pa.yaml
+# What      Hypothesis A for the modern layout containers (Container / Horizontal
+#           container / Vertical container): they are the control type this repo has
+#           already confirmed -- GroupContainer@1.5.0 -- carrying a Variant other than
+#           ManualLayout.
+# Control   GroupContainer@1.5.0   (the TYPE is studio-tested; the VARIANT below is not)
+# Evidence  UNVERIFIED.
+#           I DO NOT KNOW the exact type id or Variant value Power Apps Studio writes
+#           for the auto-layout containers, and this file does not pretend otherwise.
+#           Why hypothesis A is the one worth testing first:
+#             * Microsoft's own first-party control-id enum (62 ids, mirrored in
+#               references/control-ids-candidate.yaml) contains GroupContainer and
+#               contains NO Container, HorizontalContainer or VerticalContainer.
+#             * controls.yaml records GroupContainer@1.5.0 with Variant: ManualLayout
+#               from a real Studio paste test. A variant named after a layout mode
+#               implies sibling variants named after the other layout modes.
+#           Neither point is proof. Hypothesis B is in the sibling file
+#           container-auto-layout-b-typeid.pa.yaml.
+# Test      Paste this WHOLE file onto a blank screen in Studio (Paste code).
+# Bisect    Change the Variant FIRST (see the candidate list), then, once something
+#           pastes, delete ONE property line at a time below the bisect marker.
+# Record    Put the result in docs/test-plan.md -- including which Variant string won.
+#
+# THE VARIANT BELOW IS A PLACEHOLDER, NOT A CLAIM.
+# Candidate strings to try, in order, all of them guesses:
+#     VerticalLayout        HorizontalLayout
+#     AutoLayout            VerticalAutoLayout      HorizontalAutoLayout
+# A faster route than guessing: insert a Vertical container from the Studio toolbar,
+# select it, and read its own code back. That settles the type id, the @version and
+# the Variant string in one minute. Please do that before bisecting.
+#
+# Where the property names come from -- three different strengths, none of them a
+# paste test:
+#   LayoutDirection, LayoutAlignItems   named verbatim in the prose of Microsoft's
+#                                       published Horizontal container reference
+#                                       (MicrosoftDocs/powerapps-docs,
+#                                       control-horizontal-container.md, 2026-09-11)
+#   LayoutMinWidth, FillPortions        named in microsoft/PowerApps-Tooling issue
+#                                       #224 -- but that issue is from 2021 and
+#                                       describes an OLDER source format
+#   LayoutGap, LayoutJustifyContent,    spellings in common community use; this repo
+#   LayoutWrap, LayoutOverflowY         has no first-party citation for them
+# The enum members (LayoutDirection.Vertical and friends) are a SECOND guess stacked
+# on the first. If a line fails, try it with a plain number before deciding the
+# property name is wrong.
+Screens:
+  PasteTest:
+    Children:
+      - ctlAutoLayoutContainer:  # UNVERIFIED -- Variant and layout properties guessed
+          Control: GroupContainer@1.5.0
+          Variant: VerticalLayout
+          Properties:
+            # -- confirmed on GroupContainer by a real Studio paste test --
+            X: =40
+            Y: =40
+            Width: =480
+            Height: =360
+            Fill: =RGBA(255, 255, 255, 1)
+            # -- UNVERIFIED below here: delete one line at a time --
+            LayoutGap: =12
+            LayoutWrap: =false
+            LayoutMinWidth: =200
+            FillPortions: =1
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutJustifyContent: =LayoutJustifyContent.Start
+            LayoutOverflowY: =LayoutOverflow.Scroll

@@ -23,6 +23,14 @@ Always include:
 4. **Studio version** — Power Apps Studio → `?` → About, e.g. `3.24102.x`
 5. **The minimal YAML snippet** you pasted (full `Screens:` wrapper, one control)
 
+For the twelve controls the catalog is silent about — Gallery, Form, DataTable, Toggle,
+DatePicker, ComboBox, Slider, Timer, CheckBox, HtmlText and the modern layout containers
+— that snippet is already written for you in
+[`skills/power-app-yaml/assets/test-snippets/`](skills/power-app-yaml/assets/test-snippets/),
+one file per control, one property per line so a failure can be bisected by deleting
+lines. [`docs/test-plan.md`](docs/test-plan.md) is the results table and explains exactly
+what to change in `controls.yaml` for each kind of outcome.
+
 Example of a good catalog entry:
 
 ```markdown

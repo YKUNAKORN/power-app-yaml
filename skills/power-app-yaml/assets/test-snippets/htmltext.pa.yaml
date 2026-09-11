@@ -1,0 +1,38 @@
+# SNIPPET   htmltext.pa.yaml
+# What      An HTML text control rendering a small inline fragment.
+# Control   HtmlText   (no @version written -- see below)
+# Evidence  UNVERIFIED. Never pasted into Power Apps Studio by this repo.
+#           property names: Microsoft's published control reference, mirrored at
+#           MicrosoftDocs/powerapps-docs (retrieved 2026-09-11)
+#           control id is NOT in Microsoft's 1P control-id enum either, so the id
+#           itself is part of what this test checks.
+# Test      Paste this WHOLE file onto a blank screen in Studio (Paste code).
+# Bisect    If it fails: delete ONE line below the bisect marker, paste again,
+#           repeat. The last line you deleted is the one Studio rejects.
+# Record    Put the result in docs/test-plan.md.
+#
+# No @version is written because this repo has no evidence for one, and an
+# invented version is exactly the guess this project exists to prevent. If
+# Studio rejects the bare id, insert the control from the Studio toolbar, select
+# it, and read the real id off its own code -- that costs one minute and settles
+# both the id and the version.
+# The casing of the id is itself unverified. If HtmlText fails, try HTMLText
+# and HtmlViewer before concluding the control cannot be pasted.
+Screens:
+  PasteTest:
+    Children:
+      - ctlHtmlText:  # UNVERIFIED -- control type not paste-tested by this repo
+          Control: HtmlText
+          Properties:
+            # -- geometry: confirmed on every control this repo has tested --
+            X: =40
+            Y: =40
+            Width: =400
+            Height: =120
+            # -- UNVERIFIED below here: delete one line at a time --
+            HtmlText: ="<b>Bold</b> and <i>italic</i>"
+            AutoHeight: =false
+            Color: =RGBA(65, 71, 84, 1)
+            Size: =14
+            PaddingLeft: =8
+            PaddingTop: =8

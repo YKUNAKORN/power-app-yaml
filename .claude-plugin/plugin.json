@@ -1,6 +1,6 @@
 {
   "name": "power-app-yaml",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Turn an HTML/CSS mockup or a UI screenshot into Power Apps Canvas source code (.pa.yaml, source schema v3.0) that pastes straight into Power Apps Studio.",
   "author": {
     "name": "YKUNAKORN",

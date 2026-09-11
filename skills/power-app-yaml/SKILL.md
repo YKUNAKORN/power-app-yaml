@@ -19,22 +19,26 @@ Rationale: [`README.md`](../../README.md).
 
 ## The workflow (in order)
 
+Two branches. **App already exists** — run `scripts/app_inventory.py` first, then
+[`extend-existing-app.md`](references/extend-existing-app.md) alongside these steps.
+**Data-bound** — [`data-binding.md`](references/data-binding.md); none of it is
+confirmed, so hand over the matching [`assets/test-snippets/`](assets/test-snippets/).
+
 1. **Read [`references/controls.yaml`](references/controls.yaml)** — the catalog of what
    works. Fresh each time; the user may have added entries since.
    [`confirmed-controls.md`](references/confirmed-controls.md) is the same facts in prose,
    plus gotchas and the paste-error table.
 2. **Pick pattern(s) from [`assets/patterns/`](assets/patterns/)** — 13 lint-clean 30–85
-   line snippets extracted from the examples, each citing its source and evidence level.
-   Read only what you need: `screen-shell`, `sidebar-nav-item`, `top-bar`,
-   `card-container`, `section-header`, `form-field-text`, `form-field-dropdown`,
-   `tile-grid-cell`, `badge`, `divider`, `avatar-row`, `footer-nav`,
-   `two-column-split`.
+   line snippets extracted from the examples. Read only what you need:
+   `screen-shell`, `sidebar-nav-item`, `top-bar`, `card-container`, `section-header`,
+   `form-field-text`, `form-field-dropdown`, `tile-grid-cell`, `badge`, `divider`,
+   `avatar-row`, `footer-nav`, `two-column-split`.
 3. **Apply [`references/layout-mapping.md`](references/layout-mapping.md)** for absolute
    `X`/`Y`/`Width`/`Height`: canvas size and scale, Tailwind→px, flex/grid arithmetic,
    nesting, screen `Height`. This is the step usually guessed.
 4. **Only if the patterns don't cover it, read a *slice*** of an example, via the line
-   ranges in [`assets/examples/INDEX.md`](assets/examples/INDEX.md). All 3,234 example
-   lines cost more context than the rest of the skill combined.
+   ranges in [`assets/examples/INDEX.md`](assets/examples/INDEX.md). All 3,234 lines
+   cost more than the rest of the skill combined.
 5. **Write the full `.pa.yaml`** from the templates below. Tag anything unconfirmed.
 6. **Lint: `python scripts/pa_lint.py <file>`.** Never hand over a file with an L0/L1
    error. Report every L2/L3 warning verbatim as the UNVERIFIED list, with the snippets
@@ -62,8 +66,8 @@ Only these are confirmed. Anything else: rule 8.
 | Dropdown / select | `Classic/DropDown@2.3.1` | `Items: =["a","b"]`, `Items.Value: =Value`. No `Radius*`. |
 | Radio group | `Classic/Radio@2.3.0` | Only `Items` confirmed; no bundled example. |
 
-Everything in `controls.yaml`'s `unattempted_controls` (Slider, DatePicker, Toggle,
-ComboBox, Gallery, DataTable, Camera, Barcode…) is **unverified** — snippet-test first.
+Everything in `controls.yaml`'s `unattempted_controls` (Gallery, Toggle, DatePicker,
+DataTable…) is **unverified** — paste-test with `assets/test-snippets/` first.
 
 ## Templates
 
@@ -107,8 +111,7 @@ Screens:
 8. **Tag anything you're unsure of** inline: `# UNVERIFIED — <why you guessed>`, and
    **separately** hand over the isolated snippet `pa_lint.py` generates for it, labeled
    "paste-test this one first." If it has no confirmed Power Fx equivalent at all —
-   shadows, blur, CSS transitions, `group-hover`, one-sided borders, `rounded-full`; see
-   `impossible_css` in `controls.yaml` — say so plainly and offer the closest real
+   see `impossible_css` in `controls.yaml` — say so plainly and offer the closest real
    substitute (a thin `Rectangle` for a left border). Never drop it silently or fake a
    property.
 

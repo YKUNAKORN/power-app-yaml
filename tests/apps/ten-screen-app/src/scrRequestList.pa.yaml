@@ -1,0 +1,331 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+Screens:
+  scrRequestList:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpNavList:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - imgLogoList:
+                Control: Image@2.2.3
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Image: ="logo"
+            - btnNavHomeList:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavHomeList"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNavListList:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavListList"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNavApprovalsList:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavApprovalsList"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNavProfileList:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavProfileList"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - recNavMarkList:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =varThemePrimary
+      - grpHeaderList:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblTitleList:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblTitleList"
+                  Color: =varThemeText
+                  Size: =14
+            - lblSubList:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSubList"
+                  Color: =varThemeText
+                  Size: =14
+            - icoBackList:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Icon: =Icon.CheckBadge
+                  Color: =varThemeText
+      - grpListFilters:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - ddlListStatus:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Items: =["A","B"]
+                  Size: =14
+            - ddlListSite:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Items: =["A","B"]
+                  Size: =14
+            - txtListSearch:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  HintText: ="..."
+                  Size: =14
+            - btnListClear:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnListClear"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+      - grpListRows:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - grpListRow1:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - lblRow1Title:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblRow1Title"
+                        Color: =varThemeText
+                        Size: =14
+                  - lblRow1Date:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblRow1Date"
+                        Color: =varThemeText
+                        Size: =14
+                  - recRow1Status:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Fill: =varThemePrimary
+                  - btnRow1Open:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnRow1Open"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+            - grpListRow2:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - lblRow2Title:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblRow2Title"
+                        Color: =varThemeText
+                        Size: =14
+                  - lblRow2Date:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblRow2Date"
+                        Color: =varThemeText
+                        Size: =14
+                  - recRow2Status:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Fill: =varThemePrimary
+                  - btnRow2Open:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnRow2Open"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+            - grpListRow3:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - lblRow3Title:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblRow3Title"
+                        Color: =varThemeText
+                        Size: =14
+                  - lblRow3Date:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblRow3Date"
+                        Color: =varThemeText
+                        Size: =14
+                  - recRow3Status:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Fill: =varThemePrimary
+                  - btnRow3Open:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnRow3Open"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+      - lblListEmpty:
+          Control: Label@2.5.1
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="lblListEmpty"
+            Color: =varThemeText
+            Size: =14

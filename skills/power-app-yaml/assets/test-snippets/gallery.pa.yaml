@@ -1,0 +1,40 @@
+# SNIPPET   gallery.pa.yaml
+# What      A gallery bound to an inline table, so it needs no data source.
+# Control   Gallery   (no @version written -- see below)
+# Evidence  UNVERIFIED. Never pasted into Power Apps Studio by this repo.
+#           property names: Microsoft's published control reference, mirrored at
+#           MicrosoftDocs/powerapps-docs (retrieved 2026-09-11)
+#           control id appears in Microsoft's 1P control-id enum -- see
+#           references/control-ids-candidate.yaml. NOT evidence.
+# Test      Paste this WHOLE file onto a blank screen in Studio (Paste code).
+# Bisect    If it fails: delete ONE line below the bisect marker, paste again,
+#           repeat. The last line you deleted is the one Studio rejects.
+# Record    Put the result in docs/test-plan.md.
+#
+# No @version is written because this repo has no evidence for one, and an
+# invented version is exactly the guess this project exists to prevent. If
+# Studio rejects the bare id, insert the control from the Studio toolbar, select
+# it, and read the real id off its own code -- that costs one minute and settles
+# both the id and the version.
+# A gallery with no template children shows nothing. That is fine: this
+# checks whether the control and its properties PASTE, not whether it looks
+# right. Nesting a template comes after the id is confirmed.
+Screens:
+  PasteTest:
+    Children:
+      - ctlGallery:  # UNVERIFIED -- control type not paste-tested by this repo
+          Control: Gallery
+          Properties:
+            # -- geometry: confirmed on every control this repo has tested --
+            X: =40
+            Y: =40
+            Width: =520
+            Height: =320
+            # -- UNVERIFIED below here: delete one line at a time --
+            Items: =["Alpha","Bravo","Charlie"]
+            TemplateSize: =72
+            TemplatePadding: =8
+            TemplateFill: =RGBA(255, 255, 255, 1)
+            ShowScrollbar: =true
+            ShowNavigation: =false
+            WrapCount: =1

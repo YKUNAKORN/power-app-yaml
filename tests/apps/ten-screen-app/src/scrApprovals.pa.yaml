@@ -1,0 +1,238 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+Screens:
+  scrApprovals:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpNavAppr:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - imgLogoAppr:
+                Control: Image@2.2.3
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Image: ="logo"
+            - btnNavHomeAppr:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavHomeAppr"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNavListAppr:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavListAppr"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNavApprovalsAppr:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavApprovalsAppr"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNavProfileAppr:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavProfileAppr"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - recNavMarkAppr:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =varThemePrimary
+      - grpHeaderAppr:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblTitleAppr:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblTitleAppr"
+                  Color: =varThemeText
+                  Size: =14
+            - lblSubAppr:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSubAppr"
+                  Color: =varThemeText
+                  Size: =14
+            - icoBackAppr:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Icon: =Icon.CheckBadge
+                  Color: =varThemeText
+      - grpApprQueue:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - grpApprRow1:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - lblAppr1Title:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblAppr1Title"
+                        Color: =varThemeText
+                        Size: =14
+                  - lblAppr1Requester:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblAppr1Requester"
+                        Color: =varThemeText
+                        Size: =14
+                  - btnAppr1Yes:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnAppr1Yes"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+                  - btnAppr1No:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnAppr1No"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+            - grpApprRow2:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - lblAppr2Title:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblAppr2Title"
+                        Color: =varThemeText
+                        Size: =14
+                  - lblAppr2Requester:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblAppr2Requester"
+                        Color: =varThemeText
+                        Size: =14
+                  - btnAppr2Yes:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnAppr2Yes"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+                  - btnAppr2No:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnAppr2No"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+      - lblApprEmpty:
+          Control: Label@2.5.1
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="lblApprEmpty"
+            Color: =varThemeText
+            Size: =14

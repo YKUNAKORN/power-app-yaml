@@ -1,0 +1,189 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+Screens:
+  scrRequestDetail:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpHeaderDetail:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblTitleDetail:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblTitleDetail"
+                  Color: =varThemeText
+                  Size: =14
+            - lblSubDetail:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSubDetail"
+                  Color: =varThemeText
+                  Size: =14
+            - icoBackDetail:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Icon: =Icon.CheckBadge
+                  Color: =varThemeText
+      - grpDetailCard:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblDetailRef:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblDetailRef"
+                  Color: =varThemeText
+                  Size: =14
+            - lblDetailStatus:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblDetailStatus"
+                  Color: =varThemeText
+                  Size: =14
+            - lblDetailOwner:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblDetailOwner"
+                  Color: =varThemeText
+                  Size: =14
+            - lblDetailSite:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblDetailSite"
+                  Color: =varThemeText
+                  Size: =14
+            - recDetailDivider:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =varThemePrimary
+            - grpDetailActions:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - btnDetailEdit:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnDetailEdit"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+                  - btnDetailApprove:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnDetailApprove"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+                  - btnDetailReject:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnDetailReject"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+      - grpDetailNotes:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblNotesHeading:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblNotesHeading"
+                  Color: =varThemeText
+                  Size: =14
+            - lblNotesBody:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblNotesBody"
+                  Color: =varThemeText
+                  Size: =14
+      - btnDetailBack:
+          Control: Classic/Button@2.2.0
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="btnDetailBack"
+            Fill: =varThemePrimary
+            OnSelect: =Notify("stub")

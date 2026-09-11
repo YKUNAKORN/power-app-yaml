@@ -1,0 +1,125 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+Screens:
+  scrSettings:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpHeaderSet:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblTitleSet:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblTitleSet"
+                  Color: =varThemeText
+                  Size: =14
+            - lblSubSet:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSubSet"
+                  Color: =varThemeText
+                  Size: =14
+            - icoBackSet:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Icon: =Icon.CheckBadge
+                  Color: =varThemeText
+      - grpSetList:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblSetThemeCaption:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSetThemeCaption"
+                  Color: =varThemeText
+                  Size: =14
+            - ddlSetTheme:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Items: =["A","B"]
+                  Size: =14
+            - lblSetLangCaption:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSetLangCaption"
+                  Color: =varThemeText
+                  Size: =14
+            - ddlSetLang:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Items: =["A","B"]
+                  Size: =14
+            - recSetDivider:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =varThemePrimary
+      - btnSetSave:
+          Control: Classic/Button@2.2.0
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="btnSetSave"
+            Fill: =varThemePrimary
+            OnSelect: =Notify("stub")
+      - lblSetVersion:
+          Control: Label@2.5.1
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="lblSetVersion"
+            Color: =varThemeText
+            Size: =14

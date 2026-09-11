@@ -1,0 +1,47 @@
+# SNIPPET   container-auto-layout-b-typeid.pa.yaml
+# What      Hypothesis B for the modern layout containers: they are their OWN control
+#           type id, not a Variant of GroupContainer. This file is a template with the
+#           id left blank, because I do not know it.
+# Control   ReplaceWithTheRealContainerTypeId   <-- PLACEHOLDER. NOT A REAL CONTROL ID.
+# Evidence  UNVERIFIED, and deliberately unguessable.
+#           Community-written material for Power Apps YAML uses a bare `Container`,
+#           but Microsoft's own first-party control-id enum -- 62 ids, mirrored in
+#           references/control-ids-candidate.yaml -- has no Container,
+#           HorizontalContainer or VerticalContainer entry at all. Those two sources
+#           disagree, so writing either one here would be an invention presented as a
+#           fact, which is the single thing this repo exists to prevent.
+# Test      DO NOT PASTE THIS AS-IS. Pasted unchanged it will fail, and the failure
+#           tells you nothing. Do this instead, it takes about a minute:
+#             1. In Studio: + Insert -> Layout -> Vertical container.
+#             2. Select the container in the tree view.
+#             3. Copy its code (or App -> View code / download the app and open
+#                Src\<screen>.pa.yaml).
+#             4. Read off the exact `Control:` line -- id AND @version -- and the
+#                `Variant:` line if there is one.
+#           That one read-back answers hypothesis A and hypothesis B together. Only
+#           if it is somehow unavailable should you fall back to pasting guesses.
+# Bisect    Put the real id on the Control: line, then delete ONE property line at a
+#           time below the bisect marker.
+# Record    Put the id, the version and the Variant (if any) in docs/test-plan.md.
+#           Once a real result exists, the entry goes into controls.yaml -- not before.
+#
+# The placeholder id is spelled so it is impossible to mistake for a real one while
+# still satisfying the pa.yaml schema's control-id pattern, so this file reaches the
+# same L2 "unverified control type" warning every other snippet in this kit does
+# rather than failing at the schema layer for an unrelated reason.
+Screens:
+  PasteTest:
+    Children:
+      - ctlContainerTypeIdProbe:  # UNVERIFIED -- the Control: id below is a placeholder
+          Control: ReplaceWithTheRealContainerTypeId
+          Properties:
+            # -- geometry: confirmed on every control this repo has tested --
+            X: =40
+            Y: =40
+            Width: =480
+            Height: =360
+            # -- UNVERIFIED below here: delete one line at a time --
+            Fill: =RGBA(255, 255, 255, 1)
+            LayoutGap: =12
+            LayoutDirection: =LayoutDirection.Horizontal
+            LayoutAlignItems: =LayoutAlignItems.Stretch

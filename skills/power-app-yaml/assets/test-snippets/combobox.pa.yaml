@@ -1,0 +1,39 @@
+# SNIPPET   combobox.pa.yaml
+# What      A combo box over an inline list, single-select, searchable.
+# Control   ComboBox   (no @version written -- see below)
+# Evidence  UNVERIFIED. Never pasted into Power Apps Studio by this repo.
+#           property names: Microsoft's published control reference, mirrored at
+#           MicrosoftDocs/powerapps-docs (retrieved 2026-09-11)
+#           control id appears in Microsoft's 1P control-id enum -- see
+#           references/control-ids-candidate.yaml. NOT evidence.
+# Test      Paste this WHOLE file onto a blank screen in Studio (Paste code).
+# Bisect    If it fails: delete ONE line below the bisect marker, paste again,
+#           repeat. The last line you deleted is the one Studio rejects.
+# Record    Put the result in docs/test-plan.md.
+#
+# No @version is written because this repo has no evidence for one, and an
+# invented version is exactly the guess this project exists to prevent. If
+# Studio rejects the bare id, insert the control from the Studio toolbar, select
+# it, and read the real id off its own code -- that costs one minute and settles
+# both the id and the version.
+# DefaultSelectedItems and DisplayFields/SearchFields are left out: they take
+# a table or a JSON-ish string, so a failure there would be ambiguous.
+Screens:
+  PasteTest:
+    Children:
+      - ctlComboBox:  # UNVERIFIED -- control type not paste-tested by this repo
+          Control: ComboBox
+          Properties:
+            # -- geometry: confirmed on every control this repo has tested --
+            X: =40
+            Y: =40
+            Width: =280
+            Height: =44
+            # -- UNVERIFIED below here: delete one line at a time --
+            Items: =["Alpha","Bravo","Charlie"]
+            SelectMultiple: =false
+            IsSearchable: =true
+            InputTextPlaceholder: ="Choose one"
+            BorderColor: =RGBA(193, 198, 215, 1)
+            BorderThickness: =1
+            OnChange: =Notify("selection changed")

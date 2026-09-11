@@ -1,0 +1,39 @@
+# SNIPPET   slider.pa.yaml
+# What      A slider with an explicit range and handle colours.
+# Control   Slider   (no @version written -- see below)
+# Evidence  UNVERIFIED. Never pasted into Power Apps Studio by this repo.
+#           property names: Microsoft's published control reference, mirrored at
+#           MicrosoftDocs/powerapps-docs (retrieved 2026-09-11)
+#           control id appears in Microsoft's 1P control-id enum -- see
+#           references/control-ids-candidate.yaml. NOT evidence.
+# Test      Paste this WHOLE file onto a blank screen in Studio (Paste code).
+# Bisect    If it fails: delete ONE line below the bisect marker, paste again,
+#           repeat. The last line you deleted is the one Studio rejects.
+# Record    Put the result in docs/test-plan.md.
+#
+# No @version is written because this repo has no evidence for one, and an
+# invented version is exactly the guess this project exists to prevent. If
+# Studio rejects the bare id, insert the control from the Studio toolbar, select
+# it, and read the real id off its own code -- that costs one minute and settles
+# both the id and the version.
+# Layout is left out: it takes an enum (Layout.Horizontal / Layout.Vertical).
+Screens:
+  PasteTest:
+    Children:
+      - ctlSlider:  # UNVERIFIED -- control type not paste-tested by this repo
+          Control: Slider
+          Properties:
+            # -- geometry: confirmed on every control this repo has tested --
+            X: =40
+            Y: =40
+            Width: =280
+            Height: =40
+            # -- UNVERIFIED below here: delete one line at a time --
+            Min: =0
+            Max: =100
+            Default: =25
+            ShowValue: =true
+            HandleFill: =RGBA(0, 127, 250, 1)
+            RailFill: =RGBA(193, 198, 215, 1)
+            ValueFill: =RGBA(0, 90, 182, 1)
+            OnChange: =Notify("slid")

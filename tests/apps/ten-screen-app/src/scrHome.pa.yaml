@@ -1,0 +1,286 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+Screens:
+  scrHome:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpNavHome:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - imgLogoHome:
+                Control: Image@2.2.3
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Image: ="logo"
+            - btnNavHomeHome:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavHomeHome"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNavListHome:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavListHome"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNavApprovalsHome:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavApprovalsHome"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNavProfileHome:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNavProfileHome"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - recNavMarkHome:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =varThemePrimary
+      - grpHeaderHome:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblTitleHome:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblTitleHome"
+                  Color: =varThemeText
+                  Size: =14
+            - lblSubHome:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSubHome"
+                  Color: =varThemeText
+                  Size: =14
+            - icoBackHome:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Icon: =Icon.CheckBadge
+                  Color: =varThemeText
+      - grpTiles:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - grpTileOpen:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - lblTileOpenCount:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblTileOpenCount"
+                        Color: =varThemeText
+                        Size: =14
+                  - lblTileOpenCaption:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblTileOpenCaption"
+                        Color: =varThemeText
+                        Size: =14
+                  - icoTileOpen:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Icon: =Icon.CheckBadge
+                        Color: =varThemeText
+                  - btnTileOpen:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnTileOpen"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+            - grpTileDue:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - lblTileDueCount:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblTileDueCount"
+                        Color: =varThemeText
+                        Size: =14
+                  - lblTileDueCaption:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblTileDueCaption"
+                        Color: =varThemeText
+                        Size: =14
+                  - icoTileDue:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Icon: =Icon.CheckBadge
+                        Color: =varThemeText
+                  - btnTileDue:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnTileDue"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+            - grpTileDone:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - lblTileDoneCount:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblTileDoneCount"
+                        Color: =varThemeText
+                        Size: =14
+                  - lblTileDoneCaption:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblTileDoneCaption"
+                        Color: =varThemeText
+                        Size: =14
+                  - icoTileDone:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Icon: =Icon.CheckBadge
+                        Color: =varThemeText
+                  - btnTileDone:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnTileDone"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+      - lblHomeFooter:
+          Control: Label@2.5.1
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="lblHomeFooter"
+            Color: =varThemeText
+            Size: =14
