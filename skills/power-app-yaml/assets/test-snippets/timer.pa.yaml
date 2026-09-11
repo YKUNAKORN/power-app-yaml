@@ -1,0 +1,38 @@
+# SNIPPET   timer.pa.yaml
+# What      A visible timer that starts on its own and repeats.
+# Control   Timer   (no @version written -- see below)
+# Evidence  UNVERIFIED. Never pasted into Power Apps Studio by this repo.
+#           property names: Microsoft's published control reference, mirrored at
+#           MicrosoftDocs/powerapps-docs (retrieved 2026-09-11)
+#           control id appears in Microsoft's 1P control-id enum -- see
+#           references/control-ids-candidate.yaml. NOT evidence.
+# Test      Paste this WHOLE file onto a blank screen in Studio (Paste code).
+# Bisect    If it fails: delete ONE line below the bisect marker, paste again,
+#           repeat. The last line you deleted is the one Studio rejects.
+# Record    Put the result in docs/test-plan.md.
+#
+# No @version is written because this repo has no evidence for one, and an
+# invented version is exactly the guess this project exists to prevent. If
+# Studio rejects the bare id, insert the control from the Studio toolbar, select
+# it, and read the real id off its own code -- that costs one minute and settles
+# both the id and the version.
+# Duration is in milliseconds in Power Fx. If the control pastes but never
+# fires, that is a runtime question, not a paste question.
+Screens:
+  PasteTest:
+    Children:
+      - ctlTimer:  # UNVERIFIED -- control type not paste-tested by this repo
+          Control: Timer
+          Properties:
+            # -- geometry: confirmed on every control this repo has tested --
+            X: =40
+            Y: =40
+            Width: =200
+            Height: =48
+            # -- UNVERIFIED below here: delete one line at a time --
+            Duration: =5000
+            Repeat: =true
+            AutoStart: =true
+            AutoPause: =false
+            Text: ="Timer"
+            OnTimerEnd: =Notify("tick")

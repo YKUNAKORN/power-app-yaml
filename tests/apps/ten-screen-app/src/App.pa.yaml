@@ -1,0 +1,42 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+App:
+  Properties:
+    StartScreen: =scrSplash
+    OnStart: |-
+      =Set(varThemePrimary, ColorValue("#005AB6"));
+      Set(varThemeText, RGBA(24, 28, 35, 1));
+      Set(varThemeSurface, RGBA(255, 255, 255, 1));
+      Set(varAppTitle, "Field Service Requests");
+      Set(varPageSize, 25);
+      Set(varIsAdmin, false);
+      Set(varUserEmail, User().Email);
+      Set(varUserName, Concatenate(User().FullName, " (", varUserEmail, ")"));
+      ClearCollect(colSites, Distinct(Requests, Site));
+      Collect(colRecent, Filter(Requests, CreateBy = varUserEmail))
+
+DataSources:
+  Requests:
+    Type: Table
+    Parameters:
+      TableLogicalName: Requests
+  Approvals:
+    Type: Table
+    Parameters:
+      TableLogicalName: Approvals
+  GenerateDocument:
+    Type: Actions
+
+EditorState:
+  ScreensOrder:
+    - scrSplash
+    - scrHome
+    - scrRequestList
+    - scrRequestDetail
+    - scrNewRequest
+    - scrApprovals
+    - scrAttachments
+    - scrMyProfile
+    - scrSettings
+    - scrHelp

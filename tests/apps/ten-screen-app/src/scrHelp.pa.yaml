@@ -1,0 +1,99 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+Screens:
+  scrHelp:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpHeaderHelp:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblTitleHelp:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblTitleHelp"
+                  Color: =varThemeText
+                  Size: =14
+            - lblSubHelp:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSubHelp"
+                  Color: =varThemeText
+                  Size: =14
+            - icoBackHelp:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Icon: =Icon.CheckBadge
+                  Color: =varThemeText
+      - grpHelpBody:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblHelpIntro:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblHelpIntro"
+                  Color: =varThemeText
+                  Size: =14
+            - lblHelpContact:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblHelpContact"
+                  Color: =varThemeText
+                  Size: =14
+            - btnHelpMail:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnHelpMail"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+      - lblHelpFooter:
+          Control: Label@2.5.1
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="lblHelpFooter"
+            Color: =varThemeText
+            Size: =14

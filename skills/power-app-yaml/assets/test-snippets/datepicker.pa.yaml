@@ -1,0 +1,40 @@
+# SNIPPET   datepicker.pa.yaml
+# What      A date picker with a default date and a year range.
+# Control   DatePicker   (no @version written -- see below)
+# Evidence  UNVERIFIED. Never pasted into Power Apps Studio by this repo.
+#           property names: Microsoft's published control reference, mirrored at
+#           MicrosoftDocs/powerapps-docs (retrieved 2026-09-11)
+#           control id appears in Microsoft's 1P control-id enum -- see
+#           references/control-ids-candidate.yaml. NOT evidence.
+# Test      Paste this WHOLE file onto a blank screen in Studio (Paste code).
+# Bisect    If it fails: delete ONE line below the bisect marker, paste again,
+#           repeat. The last line you deleted is the one Studio rejects.
+# Record    Put the result in docs/test-plan.md.
+#
+# No @version is written because this repo has no evidence for one, and an
+# invented version is exactly the guess this project exists to prevent. If
+# Studio rejects the bare id, insert the control from the Studio toolbar, select
+# it, and read the real id off its own code -- that costs one minute and settles
+# both the id and the version.
+# Format is left out on purpose: it takes an enum (DateTimeFormat.*), which
+# would layer a second guess on the first. Add it only after the rest passes.
+Screens:
+  PasteTest:
+    Children:
+      - ctlDatePicker:  # UNVERIFIED -- control type not paste-tested by this repo
+          Control: DatePicker
+          Properties:
+            # -- geometry: confirmed on every control this repo has tested --
+            X: =40
+            Y: =40
+            Width: =240
+            Height: =44
+            # -- UNVERIFIED below here: delete one line at a time --
+            DefaultDate: =Today()
+            StartYear: =2020
+            EndYear: =2030
+            IsEditable: =true
+            InputTextPlaceholder: ="Pick a date"
+            IconBackground: =RGBA(255, 255, 255, 1)
+            Size: =14
+            OnChange: =Notify("date changed")

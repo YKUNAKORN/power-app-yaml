@@ -1,0 +1,24 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+ComponentDefinitions:
+  cmpPageHeader:
+    DefinitionType: CanvasComponent
+    Properties:
+      HeaderText: ="Page"
+    Children:
+      - lblCmpHeaderText:
+          Control: Label@2.5.1
+          Properties:
+            Text: =HeaderText
+      - recCmpHeaderRule:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(193, 198, 215, 1)
+  cmpEmptyState:
+    DefinitionType: CanvasComponent
+    Children:
+      - lblCmpEmptyText:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Nothing here yet"

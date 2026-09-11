@@ -7,6 +7,135 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-11
+
+Phase 4: make the skill useful on an app that already exists, and prepare -- without
+assuming -- data binding and the modern layout controls.
+
+### Added
+- `scripts/app_inventory.py` -- a one-page summary of an app that already exists, so
+  the export never has to be pasted into the conversation.
+  - `python scripts/app_inventory.py SRC [--json] [--names] [--max-bytes N]`. SRC is a
+    folder of `.pa.yaml`, a single file, or an `.msapp` (read in memory, `src/**/*.pa.yaml`
+    only -- everything outside `src/` is build output and is ignored).
+  - Reports: screens in `EditorState.ScreensOrder` order when the export has one and
+    says so when it does not; per screen the controls and their nesting depth, never
+    property values; the control types **with the `@version` that app uses**, which is
+    what a new screen has to match; `Set`/`Collect`/`ClearCollect` targets from
+    `App.OnStart` with the value when the value is a literal and `~expr` when it is not;
+    `DataSources:` entries with their `Type:`; `ComponentDefinitions:` names; and a
+    collision list of every screen and control name already taken.
+  - **The byte budget is the feature.** The text summary is capped at 2048 bytes. Rather
+    than overflow, the tool steps down a ladder of detail -- every control, then controls
+    grouped by type, then bare names, then counts, then name prefixes -- and its last
+    line states which level it used. The 10-screen, 171-control fixture in
+    `tests/apps/ten-screen-app/` (96 KB of source) summarises in 1,807 bytes; the three
+    bundled examples (270 controls) in 1,023. `--json` and `--names` are unbudgeted.
+  - It never evaluates Power Fx. `Set(varUserEmail, User().Email)` is reported as
+    `varUserEmail=~expr`, not as a guessed value -- a half-evaluated formula would be
+    worse than no value.
+- `skills/power-app-yaml/references/extend-existing-app.md` -- the procedure branch for
+  a host app: get an export, run the inventory first, read the naming convention off it
+  and match it, check every new name against the collision list, `Navigate()` only to
+  screens the inventory lists, reuse the `App.OnStart` theme variables instead of
+  re-hardcoding hex, and paste onto a **new blank** screen. Each step names the silent
+  failure it prevents -- all six fail by succeeding, which is worse than `PA1001`.
+- `skills/power-app-yaml/assets/test-snippets/` -- **the paste-test kit**: twelve
+  single-control files covering Gallery, Form, DataTable, Toggle, DatePicker, ComboBox,
+  Slider, Timer, CheckBox, HtmlText and the modern layout containers. Each is a complete
+  `Screens:` wrapper with exactly one control, geometry above a bisect marker and the
+  unverified properties below it, **one property per line** so a failure is bisected by
+  deleting lines. Every file states where its property names came from, what the paste
+  test is, and where to record the answer.
+  - Property names are taken from Microsoft's published per-control reference (mirrored
+    in `MicrosoftDocs/powerapps-docs`, retrieved 2026-09-11), so they are real Power Fx
+    property names -- which is **not** the same as confirmed for a `.pa.yaml` paste, and
+    each header says so.
+  - No `@version` is written on the bare ids: this repo has no evidence for one, and an
+    invented version number is the exact failure mode the project exists to prevent. The
+    schema makes the version optional, so the bare id is legal to write.
+  - Enum-valued properties are mostly left out on purpose -- `Format:
+    =DateTimeFormat.ShortDate` stacks a guess about the enum member on a guess about the
+    property name, so a failure would not say which half was wrong. Where an enum was
+    unavoidable the header says so and suggests trying a plain number first.
+- `docs/test-plan.md` -- the results worksheet: a row per snippet with Studio version,
+  result, failing properties and date; a result-code table (`OK`, `OK/ver X`,
+  `PA2108 <Prop>`, `PA1001`, `UNKNOWN-ID`, `OTHER`) chosen so each code implies a
+  different next step; a suggested test order; and a paragraph on exactly what to write
+  into `controls.yaml` and `confirmed-controls.md` for each outcome -- including that a
+  property which failed goes to `properties_unverified` with the Studio version that
+  rejected it, never to a "does not support" list.
+- `skills/power-app-yaml/references/data-binding.md` -- SharePoint lists, `Gallery.Items`,
+  `User().Email` filtering, two sites, `SubmitForm`, `Patch` and calling a Power Automate
+  flow, every expression marked **UNVERIFIED** and every section naming the paste test it
+  is blocked on. Three confidence markers are kept apart: SCHEMA-VERIFIED (checked here
+  against the bundled schema, with the command to re-check), DOCUMENTED (in Microsoft's
+  reference, never pasted here) and UNVERIFIED.
+- `tests/apps/ten-screen-app/` -- a synthetic 10-screen, 171-control app with a
+  deliberately non-alphabetical `EditorState.ScreensOrder`, literal and non-literal
+  `App.OnStart` variables, three `DataSources:` entries and two components.
+- `tests/test_app_inventory.py` -- 33 tests, including the acceptance criterion as an
+  assertion (10-screen app under 2 KB), that the tier really is chosen by fit, that
+  `ScreensOrder` is honoured and its absence admitted, that non-literal values are never
+  guessed, that `--names` reaches controls three levels deep, and that an `.msapp`
+  produces the same inventory as the unpacked folder.
+
+### Changed
+- **`SKILL.md` gains two branches and stays under its 8 KB budget** (8,169 bytes): "the
+  app already exists" points at `app_inventory.py` + `extend-existing-app.md`, and
+  "anything data-bound" at `data-binding.md` plus the matching test snippet. Paid for by
+  trimming rationale prose that `README.md` already carries, not by dropping procedure.
+  `scripts/validate.py` now also checks that these two pointers survive future shrinking.
+- `scripts/validate.py` -- new checks, each one negative-tested: every test snippet
+  carries the full header, parses, and contains **exactly one control** (two would make a
+  failure unattributable); every snippet has no L0/L1 error **and raises at least one L2
+  warning** (a snippet that lints clean is either catalogued already or the catalog moved
+  under it); every snippet has a row in `docs/test-plan.md`; every `yaml`/`text` example
+  in `data-binding.md` is marked UNVERIFIED, every snippet it names exists, and its YAML
+  blocks are extracted and linted; and `app_inventory.py` is run against the 10-screen
+  fixture with its output size asserted under 2 KB and its sections asserted present.
+- `README.md` gains "Working with an app that already exists" and "The paste-test kit",
+  and the repository layout covers the new files.
+- `CONTRIBUTING.md` points a control test report at the ready-made snippet and at
+  `docs/test-plan.md`.
+- `plugin.json` version 0.4.0 -> 0.5.0.
+
+### Not changed, on purpose
+- **`controls.yaml` is byte-identical.** Not one of the twelve controls entered the
+  catalog in this phase. They enter it when a real Studio result exists and not before,
+  which is the entire point of shipping the kit instead of the entries.
+
+### Known issues
+- **The modern layout containers' type ids are unknown and are not guessed.** Microsoft's
+  own first-party control-id enum (mirrored in `control-ids-candidate.yaml`) contains
+  `GroupContainer` and contains no `Container`, `HorizontalContainer` or
+  `VerticalContainer`; community-written Power Apps YAML material uses a bare
+  `Container`. The two cannot both be right, so the kit ships both hypotheses with the
+  unknown part as a clearly marked placeholder -- the `Variant:` string in
+  `container-auto-layout-a-variant.pa.yaml`, the `Control:` id in
+  `container-auto-layout-b-typeid.pa.yaml` -- and says plainly that the cheapest test is
+  to insert a container in Studio and read its own code back, which settles the id, the
+  version and the variant at once.
+- The layout-property names in that snippet come from three sources of different
+  strength, and the file says which is which: `LayoutDirection` and `LayoutAlignItems`
+  are named verbatim in the prose of Microsoft's published Horizontal container
+  reference; `LayoutMinWidth` and `FillPortions` appear in `microsoft/PowerApps-Tooling`
+  issue #224, which describes an **older** source format; `LayoutGap`,
+  `LayoutJustifyContent`, `LayoutWrap` and `LayoutOverflowY` are in common community use
+  with no first-party citation found.
+- **The bundled v3.0 schema's `DataSources` block has no SharePoint-shaped entry.**
+  `Type` is an enum of exactly `Table` and `Actions`; the `Table` branch allows only
+  `Parameters.TableLogicalName`, which is Dataverse vocabulary. `ConnectorId` is declared
+  under `properties` and then rejected by both `oneOf` branches, which reads like an
+  upstream bug. How Studio actually serialises a SharePoint list is unverified, and
+  `data-binding.md` says to read it off a real export rather than infer it.
+- Whether "Paste code" accepts a file carrying a top-level `DataSources:` block at all --
+  as opposed to ignoring it or refusing the paste -- is untested. `data-binding.md` takes
+  the conservative reading that connections are a manual Studio step.
+- Every expression in `data-binding.md` remains UNVERIFIED, and all twelve rows of
+  `docs/test-plan.md` are empty. Nothing in this phase was confirmed against Studio,
+  because nothing in this phase could be.
+
 ## [0.4.0] - 2026-09-11
 
 Phase 3: cut what the skill costs to run, and give it a real algorithm for the
@@ -212,6 +341,9 @@ hardest part of the job — turning HTML/CSS into absolute X/Y.
   `SUPPORT`, GitHub issue/PR templates.
 - CI: `scripts/validate.py` and `.github/workflows/validate.yml`.
 
-[Unreleased]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/YKUNAKORN/power-app-yaml/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/YKUNAKORN/power-app-yaml/releases/tag/v0.1.0

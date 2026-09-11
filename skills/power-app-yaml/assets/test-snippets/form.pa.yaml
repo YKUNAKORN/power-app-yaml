@@ -1,0 +1,38 @@
+# SNIPPET   form.pa.yaml
+# What      An edit form with no data source, so it pastes into any app.
+# Control   Form   (no @version written -- see below)
+# Evidence  UNVERIFIED. Never pasted into Power Apps Studio by this repo.
+#           property names: Microsoft's published control reference, mirrored at
+#           MicrosoftDocs/powerapps-docs (retrieved 2026-09-11)
+#           control id appears in Microsoft's 1P control-id enum -- see
+#           references/control-ids-candidate.yaml. NOT evidence.
+# Test      Paste this WHOLE file onto a blank screen in Studio (Paste code).
+# Bisect    If it fails: delete ONE line below the bisect marker, paste again,
+#           repeat. The last line you deleted is the one Studio rejects.
+# Record    Put the result in docs/test-plan.md.
+#
+# No @version is written because this repo has no evidence for one, and an
+# invented version is exactly the guess this project exists to prevent. If
+# Studio rejects the bare id, insert the control from the Studio toolbar, select
+# it, and read the real id off its own code -- that costs one minute and settles
+# both the id and the version.
+# DefaultMode carries a SECOND guess on top of the property name: the enum
+# member FormMode.New. If the paste fails, delete the value's enum first by
+# trying DefaultMode: =1 before concluding the property name is wrong.
+# A real form builds DataCard children from its DataSource. This snippet has
+# none, on purpose -- one control per file.
+Screens:
+  PasteTest:
+    Children:
+      - ctlForm:  # UNVERIFIED -- control type not paste-tested by this repo
+          Control: Form
+          Properties:
+            # -- geometry: confirmed on every control this repo has tested --
+            X: =40
+            Y: =40
+            Width: =520
+            Height: =360
+            # -- UNVERIFIED below here: delete one line at a time --
+            DefaultMode: =FormMode.New
+            # DataSource: =YourListName    # needs a connected list; see references/data-binding.md
+            # Item: =Gallery1.Selected    # needs a gallery on the same screen

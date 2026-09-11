@@ -1,0 +1,184 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+Screens:
+  scrNewRequest:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpHeaderNew:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblTitleNew:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblTitleNew"
+                  Color: =varThemeText
+                  Size: =14
+            - lblSubNew:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSubNew"
+                  Color: =varThemeText
+                  Size: =14
+            - icoBackNew:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Icon: =Icon.CheckBadge
+                  Color: =varThemeText
+      - grpNewForm:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblNewTitleCaption:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblNewTitleCaption"
+                  Color: =varThemeText
+                  Size: =14
+            - txtNewTitle:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  HintText: ="..."
+                  Size: =14
+            - lblNewSiteCaption:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblNewSiteCaption"
+                  Color: =varThemeText
+                  Size: =14
+            - ddlNewSite:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Items: =["A","B"]
+                  Size: =14
+            - lblNewTypeCaption:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblNewTypeCaption"
+                  Color: =varThemeText
+                  Size: =14
+            - ddlNewType:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Items: =["A","B"]
+                  Size: =14
+            - lblNewNotesCaption:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblNewNotesCaption"
+                  Color: =varThemeText
+                  Size: =14
+            - txtNewNotes:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  HintText: ="..."
+                  Size: =14
+            - recNewDivider:
+                Control: Rectangle@2.3.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =varThemePrimary
+      - grpNewButtons:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - btnNewSave:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNewSave"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+            - btnNewCancel:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="btnNewCancel"
+                  Fill: =varThemePrimary
+                  OnSelect: =Notify("stub")
+      - lblNewError:
+          Control: Label@2.5.1
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="lblNewError"
+            Color: =varThemeText
+            Size: =14

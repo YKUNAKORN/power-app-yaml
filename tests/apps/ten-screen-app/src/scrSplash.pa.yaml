@@ -1,0 +1,44 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+Screens:
+  scrSplash:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - imgSplashLogo:
+          Control: Image@2.2.3
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Image: ="logo"
+      - lblSplashTitle:
+          Control: Label@2.5.1
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="lblSplashTitle"
+            Color: =varThemeText
+            Size: =14
+      - lblSplashVersion:
+          Control: Label@2.5.1
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="lblSplashVersion"
+            Color: =varThemeText
+            Size: =14
+      - recSplashBar:
+          Control: Rectangle@2.3.0
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =varThemePrimary

@@ -1,0 +1,159 @@
+# Synthetic fixture -- NOT a real Studio export and not paste-tested.
+# It exists so scripts/app_inventory.py has a 10-screen app to summarise in CI.
+# Shapes are copied from the bundled examples; values are invented.
+Screens:
+  scrAttachments:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpHeaderAtt:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - lblTitleAtt:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblTitleAtt"
+                  Color: =varThemeText
+                  Size: =14
+            - lblSubAtt:
+                Control: Label@2.5.1
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Text: ="lblSubAtt"
+                  Color: =varThemeText
+                  Size: =14
+            - icoBackAtt:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Icon: =Icon.CheckBadge
+                  Color: =varThemeText
+      - grpAttList:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderThickness: =1
+          Children:
+            - grpAttRow1:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - icoAtt1:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Icon: =Icon.CheckBadge
+                        Color: =varThemeText
+                  - lblAtt1Name:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblAtt1Name"
+                        Color: =varThemeText
+                        Size: =14
+                  - btnAtt1Remove:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnAtt1Remove"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+            - grpAttRow2:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  X: =24
+                  Y: =24
+                  Width: =320
+                  Height: =48
+                  Fill: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =1
+                Children:
+                  - icoAtt2:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Icon: =Icon.CheckBadge
+                        Color: =varThemeText
+                  - lblAtt2Name:
+                      Control: Label@2.5.1
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="lblAtt2Name"
+                        Color: =varThemeText
+                        Size: =14
+                  - btnAtt2Remove:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        X: =24
+                        Y: =24
+                        Width: =320
+                        Height: =48
+                        Text: ="btnAtt2Remove"
+                        Fill: =varThemePrimary
+                        OnSelect: =Notify("stub")
+      - btnAttAdd:
+          Control: Classic/Button@2.2.0
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="btnAttAdd"
+            Fill: =varThemePrimary
+            OnSelect: =Notify("stub")
+      - lblAttHint:
+          Control: Label@2.5.1
+          Properties:
+            X: =24
+            Y: =24
+            Width: =320
+            Height: =48
+            Text: ="lblAttHint"
+            Color: =varThemeText
+            Size: =14
