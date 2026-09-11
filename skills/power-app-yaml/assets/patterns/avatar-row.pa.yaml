@@ -1,0 +1,54 @@
+# PATTERN   avatar-row
+# What      The signed-in-user cluster at the right end of a top bar: two
+#           right-aligned Labels (name over role) followed by a square avatar Image.
+# Controls  Label@2.5.1 (x2), Image@2.2.3
+# Source    assets/examples/example-app-shell.yaml L169-L200
+# Evidence  studio-tested (all three control types); example-file (this composition)
+# Geometry  Coordinates below are relative to the 1086-wide top-bar container.
+#           Avatar is 40 x 40 at X: =1033 (= 1086 - 40 - 13 right inset), Y: =12.
+#           Name Label is Align.Right and ends where the avatar starts:
+#             724 + 295 = 1019, leaving a 14px gap before the avatar.
+#           Role Label sits 20px below the name (Y 13 -> 33), also Align.Right.
+# Note      Right-aligning by widening the box and setting Align: =Align.Right is the
+#           pattern here -- there is no confirmed "anchor to right edge" property, so
+#           a right-hand cluster is always X + Width arithmetic.
+#           Image's only confirmed non-universal property is Image itself; the source
+#           sets no Image value, which leaves Studio's placeholder in the box.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+    Children:
+      - lblUserName:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Alex Taylor"
+            Align: =Align.Right
+            Color: =RGBA(24, 28, 35, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Size: =14
+            X: =724
+            Y: =13
+            Width: =295
+            Height: =20
+      - lblUserRole:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Administrator"
+            Align: =Align.Right
+            Color: =RGBA(65, 71, 84, 1)
+            Font: =Font.'Segoe UI'
+            Size: =9
+            X: =860
+            Y: =33
+            Width: =160
+            Height: =18
+      - imgUserAvatar:
+          Control: Image@2.2.3
+          Properties:
+            X: =1033
+            Y: =12
+            Width: =40
+            Height: =40

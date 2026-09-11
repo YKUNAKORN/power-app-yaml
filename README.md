@@ -27,6 +27,7 @@ templates so the model fills in blanks instead of inventing schema.
 - [Who it's for](#who-its-for)
 - [Why a skill for "just YAML"](#why-a-skill-for-just-yaml)
 - [Designed to run on a small model](#designed-to-run-on-a-small-model)
+- [How the skill spends its context](#how-the-skill-spends-its-context)
 - [Install](#install)
 - [Use it](#use-it)
 - [Repository layout](#repository-layout)
@@ -54,6 +55,33 @@ rather than prose you have to reason through. You can run it on a lightweight/lo
 still get output that pastes cleanly, because the hard-won specifics (which control, which version,
 which properties) are looked up, not derived.
 
+## How the skill spends its context
+
+`SKILL.md` is procedure only — workflow, control picker, templates, rules, checklist —
+and it is kept under 8 KB on purpose. Everything else is loaded on demand, cheapest
+first:
+
+| Read | Size | When |
+|---|---|---|
+| `references/controls.yaml` | ~10 KB | Always. The catalog of what works. |
+| `assets/patterns/*.pa.yaml` | 30–85 lines each | Always. Pick only the patterns the mockup needs. |
+| `references/layout-mapping.md` | ~26 KB | Whenever geometry has to be derived from HTML/CSS. |
+| `assets/examples/INDEX.md` | ~7 KB | To find a line range before opening an example. |
+| `assets/examples/*.yaml` | 3,234 lines total | Last resort, and as a slice, never whole. |
+
+The reason for the pattern library: `example-card-grid.yaml` is 1,732 lines, and the
+pattern actually worth learning from it lives in about 85 of them — the other 95% is the
+same card repeated 16 more times. Reading the catalog *and* the nearest example in full
+used to cost roughly 20k tokens before the first line of output. The patterns are
+extracted from those same example files (each one cites its source file, line range and
+evidence level), so they are not a second source of truth — they are the same evidence,
+addressable in 40 lines instead of 1,700.
+
+`layout-mapping.md` exists because turning flex/grid/Tailwind into absolute
+`X`/`Y`/`Width`/`Height` is the step a model is most likely to fake. There is no
+confirmed flex, grid, gap or padding property in Power Apps canvas YAML, so the geometry
+has to be resolved into numbers by arithmetic, once, at authoring time.
+
 ## Install
 
 ### As a Claude Code plugin (recommended)
@@ -74,7 +102,8 @@ Full walkthrough: [`docs/quickstart.md`](docs/quickstart.md).
 
 1. Give Claude an HTML mockup (Google Stitch / v0 / Figma export) or a screenshot and ask it to
    "convert this to pa.yaml".
-2. Claude reads the catalog, picks the closest example, writes the full `.pa.yaml`, and hands it back.
+2. Claude reads the catalog, picks the matching patterns, derives the coordinates, writes
+   the full `.pa.yaml`, lints it offline, and hands it back.
 3. In Power Apps Studio, on a **blank screen**, use **Paste code** and paste the whole file.
 4. If Studio reports an error or warning, paste it back. Which codes block a paste (`PA1001` /
    `PA2108`) and which are harmless version warnings (`PA2105` / `PA2106`) is covered in
@@ -89,12 +118,16 @@ power-app-yaml/
 │   ├── references/
 │   │   ├── controls.yaml             # the catalog, machine-readable — source of truth
 │   │   ├── confirmed-controls.md     # the same catalog, human-readable
+│   │   ├── layout-mapping.md         # HTML/CSS geometry → absolute X/Y/Width/Height
 │   │   ├── control-ids-candidate.yaml  # Microsoft's control-id enum, mirrored — all unverified
 │   │   └── schema-v3.pa.yaml         # Microsoft's official pa.yaml v3.0 schema (see NOTICE)
-│   └── assets/examples/
-│       ├── example-app-shell.yaml    # sidebar + top bar + page shell, with Navigate()
-│       ├── example-form.yaml         # multi-section form: TextInput + DropDown in cards
-│       └── example-card-grid.yaml    # selectable card/checklist grid with a footer
+│   └── assets/
+│       ├── patterns/                 # 13 small extracted snippets, all lint-clean
+│       └── examples/
+│           ├── INDEX.md              # per-example description, control counts, line ranges
+│           ├── example-app-shell.yaml    # sidebar + top bar + page shell, with Navigate()
+│           ├── example-form.yaml         # multi-section form: TextInput + DropDown in cards
+│           └── example-card-grid.yaml    # selectable card/checklist grid with a footer
 ├── .claude-plugin/                   # plugin + marketplace manifests
 ├── docs/                             # quickstart, troubleshooting, harvesting
 ├── scripts/
@@ -105,8 +138,9 @@ power-app-yaml/
 └── .github/                          # issue / PR templates, CI
 ```
 
-The three example screens are **real, working** `.pa.yaml` files (generic sample content) that
-double as few-shot patterns — start from the closest one when building something similar.
+The three example screens are **real, working** `.pa.yaml` files (generic sample content).
+`assets/patterns/` holds the reusable pieces extracted from them — start there, and drop
+to an example slice only when a pattern doesn't cover the case.
 
 ## Keep the catalog honest
 

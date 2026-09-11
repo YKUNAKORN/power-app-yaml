@@ -7,6 +7,84 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-11
+
+Phase 3: cut what the skill costs to run, and give it a real algorithm for the
+hardest part of the job — turning HTML/CSS into absolute X/Y.
+
+### Added
+- `skills/power-app-yaml/assets/patterns/` — 13 pattern snippets, each a standalone
+  `.pa.yaml` that lints **SAFE TO PASTE**, each opening with a header naming what it
+  is, which controls it uses, the example file and **line range** it was extracted
+  from, and its evidence level: `screen-shell`, `sidebar-nav-item`, `top-bar`,
+  `card-container`, `section-header`, `form-field-text`, `form-field-dropdown`,
+  `tile-grid-cell`, `badge`, `divider`, `avatar-row`, `footer-nav`,
+  `two-column-split`. Every one is **extracted** from the three bundled examples, not
+  invented; the headers cite the source lines so any claim is re-checkable.
+  - `radio-group` was requested and is **not included**: no bundled example contains a
+    `Classic/Radio`, so there was nothing to extract. `empty-state` likewise — no
+    example has an empty/zero-results region.
+  - `divider` carries an explicit HONEST SCOPE note: the thin-`Rectangle` *mechanism*
+    is extracted verbatim (`recDot1`, 48 × 4; `recNavActiveIndicator`, 4 × 48) but the
+    *role* of a full-width section rule has no precedent in any example.
+- `skills/power-app-yaml/assets/examples/INDEX.md` — per example: a one-paragraph
+  description, a control inventory with counts, and the line ranges of every notable
+  region, mapped to the pattern that covers it. Lets a 40-line slice be read instead of
+  a 1,732-line file. Plus a cross-file table for the sidebar / top bar / progress
+  regions that repeat in all three.
+- `skills/power-app-yaml/references/layout-mapping.md` — the geometry reference.
+  Canvas sizing and the scale factor (with the rounding rule and the row-closing
+  check); Tailwind→px tables for spacing, text sizes and line heights, font weights,
+  `rounded-*` and border widths, each under a standing warning that they are Tailwind
+  **defaults** and the mockup's own config wins; flex row/column → cumulative
+  coordinates covering every `justify-*` and `items-*` and `flex-1`; grid → column
+  width math with gutters, residue handling and `col-span`; the nesting arithmetic
+  (not just the rule); vertical overflow → how to compute the screen's `Height`; and a
+  fully worked 3-column `gap-6` `p-8` card grid from a 1440px mockup down to the exact
+  `X`/`Y`/`Width`/`Height` of every control, with the arithmetic shown at each step.
+  - **The 1366 × 768 canvas assumption is labelled.** It is *sourced* from the bundled
+    examples' own geometry (top bar `X: =280` + `Width: =1086` = 1366; sidebar
+    `Height: =768`). The separate claim that this is Power Apps' *documented default*
+    for a tablet-format app is marked **UNVERIFIED** — no citation exists in this repo
+    — with an instruction to confirm it from Studio → Settings → Display.
+  - Nothing in the file recommends a property absent from `controls.yaml`, and
+    `scripts/validate.py` now enforces that mechanically.
+- `confirmed-controls.md` gains a "Linter warnings about a control type" section: the
+  `L2.unverified-control-type` / `L2.candidate-control-type` table moved out of
+  SKILL.md, where it was costing context on every invocation.
+- `README.md` gains "How the skill spends its context" — the per-file read budget, why
+  the pattern library exists, and why `layout-mapping.md` exists. This is the rationale
+  prose moved out of SKILL.md.
+
+### Changed
+- **`SKILL.md` rewritten: 14,371 → 7,987 bytes, under the 8 KB budget.** It is now
+  procedure only — workflow, control picker, templates, rules, defaults, hand-off,
+  checklist. The new step order is: read the catalog → pick the pattern(s) → apply
+  `layout-mapping.md` → open a full example *only* if the patterns don't cover it, and
+  then only a slice via `INDEX.md` → write → **lint** → hand off. "Why a whole skill
+  for just YAML" and the design philosophy moved to `README.md`.
+- **Frontmatter `description` tightened 917 → 642 characters with every trigger phrase
+  kept** (HTML/CSS mockup, Google Stitch, v0, Figma export, UI screenshot, design
+  export, `.pa.yaml`, source schema v3.0, "Paste code", blank screen, Power Apps Studio,
+  "convert this to pa.yaml", "make this a Power Apps screen", "turn this design into
+  code I can paste into Power Apps", "even without the term .pa.yaml", fix, debug, failed
+  to paste, `PA1001`, `PA2108`, add a new screen to an existing app, extend a screen made
+  this way). The only thing cut is the closing justification sentence — "carries a catalog
+  of control types and properties that are confirmed to work versus merely guessed — the
+  #1 cause of paste failures" — which sells the skill rather than triggering it; the rest
+  of the saving is wording. "wireframe" was added: it appears in README's audience list
+  and was the one plausible trigger the description lacked.
+- `scripts/validate.py` — new checks: every `assets/patterns/*.pa.yaml` lints with
+  verdict SAFE TO PASTE (not merely exit 0); every pattern header carries
+  PATTERN/What/Controls/Source/Evidence **and cites a real bundled example**; pattern
+  line counts stay in budget (`tile-grid-cell` is a declared exception at 90, being a
+  six-control composite); SKILL.md stays under `SKILL_MD_MAX_BYTES` **and** still
+  contains the workflow, picker, templates, rules and checklist plus its pointers; the
+  frontmatter description stays under `DESCRIPTION_MAX_CHARS`; `layout-mapping.md` and
+  `SKILL.md` name no property absent from `controls.yaml`; and the worked example's
+  YAML block is extracted and linted on every run, so it cannot drift.
+- `plugin.json` version 0.3.0 → 0.4.0.
+
 ## [0.3.0] - 2026-09-10
 
 ### Added

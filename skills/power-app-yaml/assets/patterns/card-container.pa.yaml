@@ -1,0 +1,47 @@
+# PATTERN   card-container
+# What      A white panel that holds other controls -- the Power Apps stand-in for a
+#           Tailwind card (bg-white rounded border p-8). Real children go in a nested
+#           Children: key; visual overlap in Studio does NOT nest anything.
+# Controls  GroupContainer@1.5.0 (Variant: ManualLayout), Label@2.5.1
+# Source    assets/examples/example-form.yaml L17-L32 (bordered card),
+#           assets/examples/example-card-grid.yaml L29-L42 (borderless card)
+# Evidence  studio-tested (both control types); example-file (this composition)
+# Geometry  Content column runs X: =304 .. 1342 on a 1366 canvas, so Width: =1038.
+#           Internal padding is 32 (p-8), so the first child sits at X: =32.
+#           Borderless variant: drop BorderColor + BorderThickness.
+# Corners   Radius* must be set on all four corners; Rectangle's Radius* is UNVERIFIED,
+#           GroupContainer's is confirmed.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - grpCard:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            BorderColor: =RGBA(193, 198, 215, 1)
+            BorderThickness: =1
+            X: =304
+            Y: =168
+            Width: =1038
+            Height: =288
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+          Children:
+            - lblCardTitle:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Personal Details"
+                  Color: =RGBA(24, 28, 35, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =20
+                  X: =32
+                  Y: =26
+                  Width: =974
+                  Height: =44

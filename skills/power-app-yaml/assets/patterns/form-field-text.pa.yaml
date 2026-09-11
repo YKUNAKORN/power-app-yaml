@@ -1,0 +1,48 @@
+# PATTERN   form-field-text
+# What      One labelled single-line text field: a 12pt Label stacked directly on a
+#           48-tall Classic/TextInput. The unit of every form in this skill.
+# Controls  Label@2.5.1, Classic/TextInput@2.3.2
+# Source    assets/examples/example-form.yaml L65-L92
+# Evidence  example-file (Classic/TextInput is catalogued at example-file level);
+#           studio-tested (Label)
+# Geometry  Label Height: =20 at Y, input Height: =48 at Y + 24 (so the label's
+#           baseline area and the input overlap by 4px, exactly as the source does).
+#           Field pitch down a card is 88: Y = 96, 184, 272 ...
+#           Width: =479 is the two-column width inside a 1038 card -- see
+#           two-column-split.pa.yaml for that arithmetic.
+# Note      Default: ="" is what makes the box start empty; HintText is the
+#           placeholder. Both are confirmed on Classic/TextInput.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+    Children:
+      - lblFullName:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Full Name"
+            Color: =RGBA(65, 71, 84, 1)
+            Font: =Font.'Segoe UI'
+            Size: =12
+            X: =32
+            Y: =96
+            Width: =479
+            Height: =20
+      - txtFullName:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            Default: =""
+            HintText: ="Enter full name"
+            BorderColor: =RGBA(193, 198, 215, 1)
+            BorderThickness: =1
+            Color: =RGBA(65, 71, 84, 1)
+            Size: =10
+            X: =32
+            Y: =120
+            Width: =479
+            Height: =48
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0

@@ -1,0 +1,60 @@
+# PATTERN   sidebar-nav-item
+# What      One row of a left sidebar: a full-width Classic/Button (the click target),
+#           a Classic/Icon on top of it, and -- for the current page only -- a 4px
+#           Rectangle accent bar down the left edge.
+# Controls  Rectangle@2.3.0, Classic/Button@2.2.0, Classic/Icon@2.5.0
+# Source    assets/examples/example-app-shell.yaml L31-L56 (row + indicator),
+#           L118-L128 (icon), L57-L76 (inactive variant)
+# Evidence  studio-tested (each control type); example-file (this composition)
+# Geometry  280-wide sidebar; rows 48 tall on a 48 pitch: Y = 104, 152, 200, 248.
+#           Icon at X: =16, Y: = row Y + 12, 24 x 24. The sidebar sits at X: =0, so
+#           these numbers hold nested or not.
+# Inactive  row = drop the Rectangle, then Color/Icon Color: =RGBA(65, 71, 84, 1),
+#           Fill: =RGBA(255, 255, 255, 1), HoverColor + PressedColor
+#           =ColorValue("#414754"), HoverFill: =RGBA(230, 232, 243, 1),
+#           PressedFill: =ColorValue("#e6e8f3").
+# Never     use a Label for a nav item -- a Label cannot be clicked.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+    Children:
+      - recNavActiveIndicator:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(0, 127, 250, 1)
+            X: =0
+            Y: =104
+            Width: =4
+            Height: =48
+      - btnNavHome:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="Home"
+            BorderStyle: =BorderStyle.None
+            Color: =RGBA(0, 127, 250, 1)
+            Fill: =RGBA(204, 228, 246, 1)
+            Font: =Font.'Segoe UI'
+            HoverFill: =ColorValue("#007FFA")
+            PressedColor: =ColorValue("#007FFA")
+            PressedFill: =ColorValue("#cce4f6")
+            OnSelect: =Navigate('Dashboard', ScreenTransition.Fade)  # placeholder target: not a screen in this snippet
+            Size: =16
+            X: =0
+            Y: =104
+            Width: =280
+            Height: =48
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+      - icoNavHome:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            Icon: =Icon.Globe
+            Color: =RGBA(0, 127, 250, 1)
+            X: =16
+            Y: =116
+            Width: =24
+            Height: =24

@@ -1,0 +1,44 @@
+# PATTERN   form-field-dropdown
+# What      One labelled select: the same 12pt Label as form-field-text, over a
+#           Classic/DropDown instead of a TextInput.
+# Controls  Label@2.5.1, Classic/DropDown@2.3.1
+# Source    assets/examples/example-form.yaml L121-L145
+# Evidence  example-file (Classic/DropDown is catalogued at example-file level);
+#           studio-tested (Label)
+# Geometry  Identical to form-field-text: Label Height: =20 at Y, dropdown
+#           Height: =48 at Y + 24. Swapping one field type for the other never moves
+#           anything else on the card.
+# Items     Array literal, e.g. =["Draft", "Submitted"]. Items.Value: =Value is what
+#           the source pairs with it; both are confirmed on this control.
+#           Classic/DropDown has no confirmed Radius* -- the source sets none.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+    Children:
+      - lblCountry:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Country"
+            Color: =RGBA(65, 71, 84, 1)
+            Font: =Font.'Segoe UI'
+            Size: =12
+            X: =32
+            Y: =184
+            Width: =479
+            Height: =20
+      - ddCountry:
+          Control: Classic/DropDown@2.3.1
+          Properties:
+            Items: =["Select country"]
+            Items.Value: =Value
+            BorderColor: =RGBA(193, 198, 215, 1)
+            BorderThickness: =1
+            ChevronBackground: =ColorValue("#007FFA")
+            Color: =RGBA(65, 71, 84, 1)
+            Size: =10
+            X: =32
+            Y: =208
+            Width: =479
+            Height: =48

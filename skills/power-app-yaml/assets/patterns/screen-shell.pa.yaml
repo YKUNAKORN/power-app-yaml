@@ -1,0 +1,30 @@
+# PATTERN   screen-shell
+# What      The outer wrapper every .pa.yaml needs: Screens -> <name> -> Properties /
+#           Children. Studio's "Paste code" rejects a bare control, always.
+# Controls  Label@2.5.1 (placeholder child only)
+# Source    assets/examples/example-app-shell.yaml L1-L5   (fits the viewport)
+#           assets/examples/example-form.yaml      L1-L6   (scrolls: Height: =2032)
+# Evidence  studio-tested -- both shapes are taken from Studio-tested example screens.
+#
+# Canvas    The bundled examples are laid out on 1366 x 768 (top bar X: =280 plus
+#           Width: =1086 = 1366; sidebar Height: =768). Set the screen's Height ONLY
+#           when summed content height exceeds the viewport -- see
+#           references/layout-mapping.md, "Vertical overflow".
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)    # page background
+      # Height: =2032                  # uncomment when content runs past the viewport
+    Children:
+      - lblScreenPlaceholder:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Replace with the screen's real content"
+            Color: =RGBA(24, 28, 35, 1)
+            Font: =Font.'Segoe UI'
+            Size: =14
+            X: =304
+            Y: =104
+            Width: =1038
+            Height: =24

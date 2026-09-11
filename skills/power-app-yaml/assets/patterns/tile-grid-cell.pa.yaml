@@ -1,0 +1,82 @@
+# PATTERN   tile-grid-cell
+# What      One selectable tile of a checklist grid: a card, its text, a checkbox
+#           bound to a variable, and a transparent full-card Button that toggles it.
+# Controls  GroupContainer@1.5.0 (ManualLayout), Label@2.5.1 (x2), Rectangle@2.3.0,
+#           Classic/Icon@2.5.0, Classic/Button@2.2.0
+# Source    assets/examples/example-card-grid.yaml L29-L113 (Doc01, 1 of 17 rows)
+# Evidence  studio-tested (every control type); example-file (this composition)
+# Geometry  Card 1038 x 96 at X: =304; row pitch 112 (Y = 208, 320, 432 ...). Text
+#           column X: =88, 886 wide; checkbox X: =990. The overlay Button matches
+#           the card exactly (1038 x 96) and leaves X/Y at their 0 default.
+# Selection Fill: =If(var, on, off) on the Rectangle, Visible: =var on the check
+#           Icon, OnSelect: =Set(var, !var) on the overlay. One variable per tile.
+# Also in   the source: a 48 x 48 Rectangle icon box at X: =24, Y: =24 holding a
+#           24 x 24 Classic/Icon at X: =36, Y: =36 (same block-behind-icon mechanic
+#           as badge.pa.yaml), plus Radius*: =0 on the card. Omitted for length.
+
+Screens:
+  PatternScreen:
+    Properties:
+      Fill: =RGBA(244, 244, 246, 1)
+    Children:
+      - tileCard:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            X: =304
+            Y: =208
+            Width: =1038
+            Height: =96
+          Children:
+            - tileTitle:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Onboarding Form.docx"
+                  Color: =RGBA(24, 28, 35, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =14
+                  X: =88
+                  Y: =18
+                  Width: =886
+                  Height: =24
+            - tileSubtitle:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Word Document"
+                  Color: =RGBA(65, 71, 84, 0.6)
+                  Size: =12
+                  X: =88
+                  Y: =46
+                  Width: =886
+                  Height: =20
+            - tileCheckboxBox:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =If(varTile01, RGBA(0, 90, 182, 1), RGBA(255, 255, 255, 1))
+                  X: =990
+                  Y: =36
+                  Width: =24
+                  Height: =24
+            - tileCheckIcon:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Icon: =Icon.Check
+                  Color: =RGBA(255, 255, 255, 1)
+                  Visible: =varTile01
+                  X: =992
+                  Y: =38
+                  Width: =20
+                  Height: =20
+            - tileClickOverlay:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Text: =""
+                  BorderStyle: =BorderStyle.None
+                  Fill: =RGBA(0, 0, 0, 0)
+                  HoverFill: =RGBA(230, 232, 243, 0.5)
+                  PressedFill: =RGBA(210, 214, 235, 0.6)
+                  OnSelect: =Set(varTile01, !varTile01)
+                  Width: =1038
+                  Height: =96
