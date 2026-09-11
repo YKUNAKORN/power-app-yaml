@@ -89,15 +89,17 @@ power-app-yaml/
 │   ├── references/
 │   │   ├── controls.yaml             # the catalog, machine-readable — source of truth
 │   │   ├── confirmed-controls.md     # the same catalog, human-readable
+│   │   ├── control-ids-candidate.yaml  # Microsoft's control-id enum, mirrored — all unverified
 │   │   └── schema-v3.pa.yaml         # Microsoft's official pa.yaml v3.0 schema (see NOTICE)
 │   └── assets/examples/
 │       ├── example-app-shell.yaml    # sidebar + top bar + page shell, with Navigate()
 │       ├── example-form.yaml         # multi-section form: TextInput + DropDown in cards
 │       └── example-card-grid.yaml    # selectable card/checklist grid with a footer
 ├── .claude-plugin/                   # plugin + marketplace manifests
-├── docs/                             # quickstart, troubleshooting
+├── docs/                             # quickstart, troubleshooting, harvesting
 ├── scripts/
 │   ├── pa_lint.py                    # offline .pa.yaml verifier (L0-L3) — run before handing a file over
+│   ├── harvest_controls.py           # grow the catalog from real Studio exports (.pa.yaml / .msapp)
 │   └── validate.py                   # repo sanity checks (run before a PR)
 ├── tests/                            # linter fixtures + unittest suite
 └── .github/                          # issue / PR templates, CI
@@ -114,6 +116,21 @@ different version numbers (it will warn and auto-substitute). **When your own St
 corrects something, update your copy of the catalog** — and, ideally,
 [report it](https://github.com/YKUNAKORN/power-app-yaml/issues/new?template=control-report.yml) so
 everyone benefits. Anything not in the catalog is treated as unverified by design.
+
+**Grow the catalog from a real export.** If you can download your app's source — `pac canvas
+download -d <dir>`, or just unzip the `.msapp` — the `.pa.yaml` files under `src/` are Studio's own
+output, and `scripts/harvest_controls.py` turns them into catalog entries:
+
+```bash
+python scripts/harvest_controls.py ./myapp/src --report   # what's new, what's untested
+python scripts/harvest_controls.py ./myapp/src --merge    # fold it in, then review the diff
+```
+
+One caveat governs all of it, and Microsoft documents it: *only properties that differ from the
+default values are serialized.* **A property missing from an export is not evidence that the
+control lacks it** — so the harvester only ever makes positive claims, and never writes a "does not
+support" list. Full walkthrough, both extraction routes, and the review checklist:
+[`docs/harvesting.md`](docs/harvesting.md).
 
 ## What it can't do (honestly)
 

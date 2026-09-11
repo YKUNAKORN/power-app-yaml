@@ -4,13 +4,19 @@
 Proves a .pa.yaml is correct BEFORE it reaches the user, instead of making the user act
 as the compiler by pasting into Power Apps Studio and reading back errors.
 
-    python scripts/pa_lint.py FILE [FILE...] [--catalog PATH] [--json] [--strict] [--quiet]
+    python scripts/pa_lint.py FILE [FILE...] [--catalog PATH] [--candidates PATH]
+                              [--json] [--strict] [--quiet]
 
 Four layers, run in order. A layer that makes later layers meaningless stops the run:
 
   L0  YAML parse            ERROR    the file must load at all
   L1  JSON Schema           ERROR    maps to Studio PA1001 (blocks the whole paste)
   L2  Catalog lint          WARNING  maps to Studio PA2108 (unverified control/property)
+                                     A control type absent from the catalog but present
+                                     in references/control-ids-candidate.yaml is
+                                     reported as "known to Microsoft's tooling but not
+                                     yet paste-tested here" -- same severity, better
+                                     sentence. Never treated as evidence.
   L3  Convention checks     WARNING  SKILL.md's own rules
 
 Exit codes:  0 clean  |  1 any L0/L1 error  |  2 warnings only AND --strict
@@ -42,6 +48,7 @@ except ImportError:  # pragma: no cover - exercised on minimal installs
 ROOT = Path(__file__).resolve().parent.parent
 SKILL_REFS = ROOT / "skills" / "power-app-yaml" / "references"
 DEFAULT_CATALOG = SKILL_REFS / "controls.yaml"
+DEFAULT_CANDIDATES = SKILL_REFS / "control-ids-candidate.yaml"
 SCHEMA_PATH = SKILL_REFS / "schema-v3.pa.yaml"
 
 ROOT_KEYS = ("App", "Screens", "ComponentDefinitions", "DataSources", "EditorState")
@@ -228,6 +235,34 @@ class Catalog:
 
 def load_catalog(path: Path) -> Catalog:
     return Catalog(yaml.safe_load(path.read_text(encoding="utf-8-sig")) or {})
+
+
+class CandidateIds:
+    """Control type ids Microsoft's tooling knows about but this repo has not tested.
+
+    Strictly a wording aid. Membership never downgrades a warning and never counts as
+    evidence -- see references/control-ids-candidate.yaml for why.
+    """
+
+    def __init__(self, data):
+        data = data or {}
+        self.by_id = {}
+        for entry in data.get("control_ids") or []:
+            if isinstance(entry, dict) and entry.get("id"):
+                self.by_id[str(entry["id"])] = entry
+        self.commit = data.get("upstream_commit")
+        self.path = data.get("upstream_path")
+
+    def lookup(self, base):
+        return self.by_id.get(base)
+
+
+def load_candidates(path: Path) -> CandidateIds:
+    """Missing or unreadable is fine -- the linter just falls back to the old wording."""
+    try:
+        return CandidateIds(yaml.safe_load(path.read_text(encoding="utf-8-sig")))
+    except (OSError, yaml.YAMLError):
+        return CandidateIds({})
 
 
 # --------------------------------------------------------------------- L0: YAML parse
@@ -445,31 +480,61 @@ def make_snippet(ctrl: ControlRef, only_property: str | None = None) -> str:
     return "\n".join(lines) + "\n"
 
 
-def catalog_layer(controls, catalog: Catalog):
+def catalog_layer(controls, catalog: Catalog, candidates: "CandidateIds | None" = None):
+    candidates = candidates or CandidateIds({})
     findings = []
     for ctrl in controls:
         path = fmt_path(ctrl.path)
         entry = catalog.lookup(ctrl.ctype)
 
         if entry is None:
+            base = (ctrl.ctype or "").split("@", 1)[0]
             siblings = catalog.same_base(ctrl.ctype)
+            candidate = candidates.lookup(base)
+            check = "L2.unverified-control-type"
+            message = (f"Unverified control type {ctrl.ctype!r} -- paste-test in "
+                       "isolation before trusting it.")
             if siblings:
                 known = ", ".join(e["type"] for e in siblings)
                 detail = (f"The catalog has {known}. A version-only difference is "
                           "usually harmless -- Studio warns (PA2105/PA2106) and "
                           "substitutes the current version -- but it is not confirmed.")
-            elif (ctrl.ctype or "").split("@", 1)[0] in catalog.unattempted:
+            elif candidate is not None:
+                # Known to Microsoft's tooling, unproven here. A better sentence than
+                # "unknown control", and nothing more than that: still a warning, still
+                # needs a Studio test.
+                check = "L2.candidate-control-type"
+                message = (f"Control type {ctrl.ctype!r} is known to Microsoft's "
+                           "tooling but not yet paste-tested here -- paste-test it in "
+                           "isolation before trusting it.")
+                detail = (
+                    f"{base!r} appears in Microsoft's first-party control id enum "
+                    f"({candidates.path or 'PowerApps-Tooling'}"
+                    + (f" @ {candidates.commit[:7]}" if candidates.commit else "")
+                    + "), mirrored here as references/control-ids-candidate.yaml. "
+                    "That enum ships only in Microsoft's source tree -- the published "
+                    "schema this repo bundles leaves the enum open -- and it carries "
+                    "no @version and no property list. So it tells you the id is "
+                    "plausible, not that this Studio build accepts it, and it says "
+                    "nothing at all about the properties you set below."
+                )
+                if candidate.get("catalog"):
+                    detail += f" Catalog note: {candidate['catalog']}."
+                if base in catalog.unattempted:
+                    detail += (" It is also on the catalog's 'not yet attempted' list: "
+                               "no paste evidence either way.")
+            elif base in catalog.unattempted:
                 detail = ("This control is on the catalog's 'not yet attempted' list: "
                           "no evidence either way. Do not assume property names carry "
                           "over from a similar control.")
             else:
-                detail = ("Not in the catalog, so unverified by definition. The JSON "
-                          "Schema cannot catch this -- Microsoft ships no enum of "
-                          "first-party control ids -- so Studio is the only oracle.")
+                detail = ("Not in the catalog and not in Microsoft's first-party "
+                          "control id enum either, so unverified by definition. The "
+                          "JSON Schema cannot catch this -- the published pa.yaml "
+                          "schema leaves the control id enum open -- so Studio is the "
+                          "only oracle.")
             findings.append(Finding(
-                "L2", "L2.unverified-control-type", WARNING,
-                f"Unverified control type {ctrl.ctype!r} -- paste-test in isolation "
-                "before trusting it.",
+                "L2", check, WARNING, message,
                 path=path, line=line_of(ctrl.name_node), detail=detail,
                 snippet=make_snippet(ctrl),
             ))
@@ -617,7 +682,7 @@ def convention_layer(controls, root_node, lines, l2_findings):
 # ------------------------------------------------------------------------ orchestration
 
 
-def lint_file(path: Path, catalog: Catalog, schema):
+def lint_file(path: Path, catalog: Catalog, schema, candidates=None):
     text = path.read_text(encoding="utf-8-sig")
     lines = text.splitlines()
 
@@ -633,7 +698,7 @@ def lint_file(path: Path, catalog: Catalog, schema):
 
         if not any(f.severity == ERROR for f in findings):
             controls = list(walk_controls(root_node))
-            l2 = catalog_layer(controls, catalog)
+            l2 = catalog_layer(controls, catalog, candidates)
             findings += l2
             findings += convention_layer(controls, root_node, lines, l2)
 
@@ -723,6 +788,9 @@ def main(argv=None):
     parser.add_argument("files", nargs="+", type=Path, help=".pa.yaml file(s) to check")
     parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG,
                         help="path to controls.yaml (default: the bundled catalog)")
+    parser.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES,
+                        help="path to control-ids-candidate.yaml, used only to word "
+                             "the 'unknown control' warning better (default: bundled)")
     parser.add_argument("--json", action="store_true",
                         help="emit findings as JSON for machine consumption")
     parser.add_argument("--strict", action="store_true",
@@ -743,6 +811,8 @@ def main(argv=None):
         print(f"ERROR: cannot read catalog {args.catalog}: {exc}", file=sys.stderr)
         return 2
 
+    candidates = load_candidates(args.candidates)
+
     schema = None
     if HAVE_JSONSCHEMA:
         try:
@@ -756,7 +826,7 @@ def main(argv=None):
         if not path.is_file():
             print(f"ERROR: no such file: {path}", file=sys.stderr)
             return 2
-        reports.append(lint_file(path, catalog, schema))
+        reports.append(lint_file(path, catalog, schema, candidates))
 
     total_errors = sum(r["errors"] for r in reports)
     total_warnings = sum(r["warnings"] for r in reports)
@@ -774,6 +844,7 @@ def main(argv=None):
         print(json.dumps({
             "version": 1,
             "catalog": args.catalog.as_posix(),
+            "candidate_ids": args.candidates.as_posix(),
             "studio_version_tested": catalog.studio_version,
             "schema_checked": schema is not None,
             "files": reports,

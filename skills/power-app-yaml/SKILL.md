@@ -49,6 +49,20 @@ before trusting them.** Cleverness is not required; discipline is.
 7. **Read back the Studio result** (error, warning, or screenshot) and fix only what broke.
 8. **If a Studio test confirms something new**, record it in `confirmed-controls.md` — and in
    `references/controls.yaml`, which is the machine-readable source of truth the linter reads.
+9. **If the user has a real Studio export**, harvest it instead of guessing. A `.pa.yaml`
+   downloaded with `pac canvas download` or unzipped from an `.msapp` is Studio's own output:
+   `python scripts/harvest_controls.py <export> --report` grows the catalog from evidence.
+   See [`docs/harvesting.md`](../../docs/harvesting.md).
+
+**Two warnings the linter can raise about a control type, and what each means:**
+
+| Check | Means | What to do |
+|---|---|---|
+| `L2.unverified-control-type` | Not in the catalog and not in Microsoft's control-id enum either. | Treat as a guess. Tag `# UNVERIFIED`, hand over the isolated snippet. |
+| `L2.candidate-control-type` | The id appears in Microsoft's first-party control-id enum (`references/control-ids-candidate.yaml`) but has never been paste-tested here. | Still a guess about *this* Studio build, and it says nothing about the properties. Same treatment: tag it, hand over the snippet. Never present it as confirmed. |
+
+Neither is evidence. `references/control-ids-candidate.yaml` is a wording aid; every entry in it
+is marked `evidence: unverified` and none may be promoted without a Studio test.
 
 ---
 
@@ -284,6 +298,11 @@ This skill is only as good as `references/confirmed-controls.md`. When a Studio 
 conversation confirms or disconfirms something, update that file (add a row, move an item from
 unverified to confirmed, or fix a wrong assumption) so the next conversion benefits. Don't let
 hard-won test results live only in chat history.
+
+The fastest honest way to grow it is a real Studio export — see
+[`docs/harvesting.md`](../../docs/harvesting.md). But note the caveat that governs everything
+there: **Studio only serialises properties whose value differs from the default**, so a property
+missing from an export proves nothing. Never turn an absence into a "does not support" claim.
 
 ## Pre-send checklist (run through this before replying)
 

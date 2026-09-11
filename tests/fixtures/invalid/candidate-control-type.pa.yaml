@@ -1,0 +1,15 @@
+# Trap 7: a control type this repo has never paste-tested, but which DOES appear in
+# Microsoft's first-party control id enum (references/control-ids-candidate.yaml).
+# It must warn -- being in Microsoft's tooling is not evidence that Studio accepts it
+# at this version, and says nothing about the properties -- but with better wording
+# than a wholly unknown control, and it still needs an # UNVERIFIED tag.
+Screens:
+  Home:
+    Children:
+      - tglNotify:
+          Control: Toggle@1.0.0
+          Properties:
+            X: =0
+            Y: =0
+            Width: =120
+            Height: =40

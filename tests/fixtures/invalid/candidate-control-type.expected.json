@@ -1,0 +1,9 @@
+{
+  "description": "A control id known to Microsoft's tooling but not paste-tested here gets its own L2 check, and still needs the L3 # UNVERIFIED tag.",
+  "expected_exit_code": 0,
+  "expected_verdict_code": "unverified",
+  "expected_findings": [
+    {"layer": "L2", "check": "L2.candidate-control-type"},
+    {"layer": "L3", "check": "L3.missing-unverified-comment"}
+  ]
+}
