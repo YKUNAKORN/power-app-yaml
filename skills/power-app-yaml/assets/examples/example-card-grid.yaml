@@ -1507,7 +1507,7 @@ Screens:
                   Height: =48
                   HoverColor: =ColorValue("#414754")
                   HoverFill: =ColorValue("#e6e8f3")
-                  OnSelect: =Navigate('Home', ScreenTransition.Fade)
+                  OnSelect: =Navigate('Home', ScreenTransition.Fade)  # placeholder - not a screen in this file; wire up once both screens are pasted
                   PressedColor: =ColorValue("#414754")
                   PressedFill: =ColorValue("#e6e8f3")
                   RadiusBottomLeft: =0
@@ -1603,7 +1603,7 @@ Screens:
                   Height: =48
                   HoverColor: =ColorValue("#414754")
                   HoverFill: =RGBA(230, 232, 243, 1)
-                  OnSelect: =Navigate('MyRequests', ScreenTransition.Fade)
+                  OnSelect: =Navigate('MyRequests', ScreenTransition.Fade)  # placeholder - not a screen in this file; wire up once both screens are pasted
                   PressedColor: =ColorValue("#414754")
                   PressedFill: =ColorValue("#e6e8f3")
                   RadiusBottomLeft: =0
@@ -1678,7 +1678,7 @@ Screens:
             Height: =48
             HoverBorderColor: =ColorValue("#007FFA")
             HoverFill: =ColorValue("#007FFA")
-            OnSelect: =Navigate('Home', ScreenTransition.Fade)
+            OnSelect: =Navigate('Home', ScreenTransition.Fade)  # placeholder - not a screen in this file; wire up once both screens are pasted
             PressedBorderColor: =ColorValue("#007FFA")
             PressedFill: =ColorValue("#007FFA")
             RadiusBottomLeft: =0
@@ -1697,7 +1697,7 @@ Screens:
             Color: =RGBA(255,255,255,1)
             Fill: =RGBA(0, 127, 250, 1)
             Height: =48
-            OnSelect: =Navigate('RequestForm', ScreenTransition.Fade)
+            OnSelect: =Navigate('RequestForm', ScreenTransition.Fade)  # placeholder - not a screen in this file; wire up once both screens are pasted
             RadiusBottomLeft: =0
             RadiusBottomRight: =0
             RadiusTopLeft: =0

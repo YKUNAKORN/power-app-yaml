@@ -1,0 +1,64 @@
+# Eval case: card-grid
+#
+# Scored by:  python scripts/run_eval.py OUTPUT.pa.yaml --case tests/evals/card-grid
+# See notes.md for what this case stresses, docs/evals.md for how to run it.
+#
+# Every count is a RANGE, for the reason given in app-shell/expectations.yaml.
+# The ranges here are the widest of the five cases on purpose: 17 near-identical
+# rows means a conversion that abbreviates is wrong in a way the count shows, but
+# how many controls each row costs is a legitimate design choice (the reference
+# spends 8 per row; a leaner reading could spend 5).
+
+case: card-grid
+title: "Selectable card list: 17 rows on a fixed pitch, with per-row state"
+mockup: mockup.html
+
+canvas:
+  width: 1366
+  height: 768
+
+structure:
+  screens: {min: 1, max: 1}
+  required_screen_properties: [Fill, Height]   # 17 rows do not fit in 768px
+
+lint:
+  verdict: [safe]
+  max_errors: 0
+  max_warnings: 0
+
+controls:
+  # 17 rows is the assertion. Anything under ~90 controls has abbreviated the list,
+  # which is the failure this case exists to catch -- a model that writes three rows
+  # and a comment saying "repeat for the rest" has not produced a pasteable screen.
+  total: {min: 95, max: 230}
+  required_types: [Label, GroupContainer, Classic/Button]
+  by_type:
+    Label:          {min: 30, max: 60}   # title + kind per row, plus the page header
+    GroupContainer: {min: 14, max: 30}   # one card per row, plus the shell
+    Classic/Button: {min: 17, max: 32}   # a click target per row, plus nav and footer
+    Rectangle:      {min: 0, max: 60}
+    Classic/Icon:   {min: 0, max: 60}
+    Image:          {min: 0, max: 3}
+  # Gallery is the obvious real-world answer to "17 identical rows" and is exactly
+  # what this repo has no evidence for. It is in controls.yaml's unattempted_controls,
+  # so it must not appear in a file handed over as ready to paste -- it belongs in an
+  # isolated test snippet until Studio confirms it.
+  forbidden_types: [Gallery, DataTable]
+
+geometry:
+  in_bounds: true
+  max_unresolved: 0
+
+navigation:
+  count: {min: 1}
+  targets_resolve: true
+
+catalog:
+  max_untagged_unverified: 0
+  max_unverified_properties: 0
+
+reference:
+  # Not model output -- a hand-written screen standing in for a good answer, so the
+  # scorer can be exercised in CI without running a model. See docs/evals.md.
+  output: ../../../skills/power-app-yaml/assets/examples/example-card-grid.yaml
+  known_deviations: []

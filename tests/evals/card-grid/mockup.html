@@ -1,0 +1,117 @@
+<!doctype html>
+<!-- Eval fixture: a selectable card list (17 rows on a fixed pitch) inside the app
+     shell. Self-contained: no CDN, no webfont, no image file. The checkbox and the
+     file icon are CSS shapes, not assets. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Select Templates</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; background: #f4f4f6;
+         width: 1366px; }
+
+  /* --- shell ------------------------------------------------------------- */
+  .sidebar { position: absolute; left: 0; top: 0; width: 280px; height: 2232px;
+             background: #fff; }
+  .logo { height: 32px; margin: 32px 24px 0; font-size: 24px; font-weight: 700;
+          color: #007ffa; text-align: center; line-height: 32px; }
+  .nav { position: absolute; top: 104px; left: 0; width: 280px; }
+  .nav a { display: block; height: 48px; line-height: 48px; padding-left: 56px;
+           font-size: 16px; color: #414754; text-decoration: none; position: relative; }
+  .nav a .ico { position: absolute; left: 16px; top: 12px; width: 24px; height: 24px;
+                border-radius: 6px; background: #c1c6d7; }
+  .nav a.active { background: #cce4f6; color: #007ffa; }
+  .nav a.active::before { content: ""; position: absolute; left: 0; top: 0;
+                          width: 4px; height: 48px; background: #007ffa; }
+  .topbar { position: absolute; left: 280px; top: 0; width: 1086px; height: 64px;
+            background: #fff; }
+  .user { position: absolute; right: 80px; top: 12px; text-align: right; }
+  .user .name { font-size: 14px; font-weight: 700; color: #181c23; }
+  .user .role { font-size: 12px; color: #414754; }
+  .avatar { position: absolute; right: 24px; top: 12px; width: 40px; height: 40px;
+            border-radius: 20px; background: #c1c6d7; }
+
+  /* --- list -------------------------------------------------------------- */
+  .page { position: absolute; left: 304px; top: 96px; width: 1038px; }
+  h1 { font-size: 26px; font-weight: 700; color: #181c23; margin-bottom: 8px; }
+  .lede { font-size: 12px; color: #414754; margin-bottom: 32px; }
+
+  /* 96px card on a 112px pitch -- 16px of gap between rows. */
+  .row { position: relative; width: 1038px; height: 96px; margin-bottom: 16px;
+         background: #fff; border: 1px solid #c1c6d7; border-radius: 8px;
+         cursor: pointer; }
+  .row .filebox { position: absolute; left: 24px; top: 24px; width: 48px; height: 48px;
+                  border-radius: 8px; background: #cce4f6; }
+  .row .filebox i { position: absolute; left: 12px; top: 12px; width: 24px; height: 24px;
+                    border-radius: 4px; background: #007ffa; }
+  .row .title { position: absolute; left: 88px; top: 26px; font-size: 14px;
+                font-weight: 700; color: #181c23; }
+  .row .kind  { position: absolute; left: 88px; top: 50px; font-size: 12px;
+                color: rgba(65, 71, 84, 0.6); }
+  .row .check { position: absolute; right: 24px; top: 34px; width: 28px; height: 28px;
+                border-radius: 6px; background: #f4f4f6; border: 1px solid #c1c6d7; }
+  .row.on .check { background: #007ffa; border-color: #007ffa; }
+  .row.on .check::after { content: ""; position: absolute; left: 6px; top: 6px;
+                          width: 16px; height: 16px; border-radius: 3px; background: #fff; }
+
+  .footer { position: absolute; left: 304px; top: 2144px; width: 1038px; }
+  .footer button { height: 40px; padding: 0 24px; font-size: 14px; border-radius: 6px; }
+  .footer .back { background: transparent; border: 1px solid #c1c6d7; color: #414754; }
+  .footer .next { float: right; background: #007ffa; border: 1px solid #007ffa; color: #fff; }
+  .progress { position: absolute; left: 623px; top: 2200px; display: flex; gap: 8px; }
+  .progress i { display: block; width: 48px; height: 4px; background: #c1c6d7; }
+  .progress i.on { background: #007ffa; }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="logo">Team Portal</div>
+  <div class="nav">
+    <a href="#home"><span class="ico"></span>Home</a>
+    <a class="active" href="#templates"><span class="ico"></span>Templates</a>
+    <a href="#new"><span class="ico"></span>New Request</a>
+    <a href="#mine"><span class="ico"></span>My Requests</a>
+  </div>
+</nav>
+
+<header class="topbar">
+  <div class="user">
+    <div class="name">Alex Taylor</div>
+    <div class="role">Administrator</div>
+  </div>
+  <div class="avatar"></div>
+</header>
+
+<main class="page">
+  <h1>Select Templates</h1>
+  <p class="lede">Select one or more templates to include in your request.</p>
+
+  <div class="row on"><span class="filebox"><i></i></span><span class="title">Onboarding Form.docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Onboarding Form (EN).docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Change Request.pdf</span><span class="kind">PDF Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Cancellation Form.pdf</span><span class="kind">PDF Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Sign-up Form.pdf</span><span class="kind">PDF Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Transfer Form.pdf</span><span class="kind">PDF Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Tax Declaration.pdf</span><span class="kind">PDF Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Signature Card.docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Update Details (EN).docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Update Details.docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Risk Disclosure (EN).docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Risk Disclosure.docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Trading Agreement.docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Consent Form.docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Terms of Service.docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Privacy Notice.docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+  <div class="row"><span class="filebox"><i></i></span><span class="title">Eligibility Confirmation.docx</span><span class="kind">Word Document</span><span class="check"></span></div>
+</main>
+
+<div class="footer">
+  <button class="back">&lt; BACK</button>
+  <button class="next">NEXT &gt;</button>
+</div>
+<div class="progress"><i class="on"></i><i class="on"></i><i></i></div>
+
+</body>
+</html>

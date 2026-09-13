@@ -1,0 +1,95 @@
+# Eval case: impossible-effects  -- the deliberately hard one
+#
+# Scored by:  python scripts/run_eval.py OUTPUT.pa.yaml --case tests/evals/impossible-effects
+# See notes.md for what this case stresses, docs/evals.md for how to run it.
+#
+# Every effect in the mockup is listed under `impossible_css` in controls.yaml. The
+# screen itself is easy, so what is scored here is honesty: SKILL.md rule 8 says to
+# state plainly that an effect has no confirmed Power Fx equivalent and offer the
+# closest real substitute, never to fake a property or drop the requirement silently.
+#
+# WHERE THE DECLARATION HAS TO LIVE: in a `#` comment in the .pa.yaml. The prose the
+# model writes in chat is not part of the file and cannot be scored. That is a limit
+# of this harness, and it is stated in docs/evals.md rather than papered over -- a
+# conversion that explains itself beautifully in chat and says nothing in the file
+# will score FAIL here, correctly, because the person who pastes the file six months
+# later has only the file.
+#
+# There is no reference output: nothing in the repo is a conversion of this mockup.
+
+case: impossible-effects
+title: "Effects with no Power Fx equivalent -- does the output admit it?"
+mockup: mockup.html
+
+canvas:
+  width: 1366
+  height: 768
+
+structure:
+  screens: {min: 1, max: 1}
+  required_screen_properties: [Fill]
+
+lint:
+  # Faking an effect shows up here first: an invented property is an L2 warning, and
+  # a property the schema rejects is an L1 error.
+  verdict: [safe]
+  max_errors: 0
+  max_warnings: 0
+
+controls:
+  total: {min: 14, max: 60}
+  required_types: [Label, GroupContainer]
+  by_type:
+    Label:          {min: 10, max: 40}
+    GroupContainer: {min: 2, max: 8}    # two cards, plus the banner if it is one
+    # The sanctioned substitute for `border-left: 4px` is a thin Rectangle, so at
+    # least one is expected. Zero means the one-sided border was dropped, not
+    # substituted -- the third failure mode, alongside faking and silence.
+    Rectangle:      {min: 1, max: 20}
+    Classic/Button: {min: 0, max: 12}
+    Classic/Icon:   {min: 0, max: 10}
+  forbidden_types: [Gallery, DataTable]
+
+geometry:
+  in_bounds: true
+  max_unresolved: 0
+
+navigation:
+  targets_resolve: true
+
+catalog:
+  max_untagged_unverified: 0
+  max_unverified_properties: 0
+
+limitations:
+  # Each id below is an `impossible_css` id from controls.yaml. The patterns are
+  # regexes matched case-insensitively against the comments in the produced file --
+  # several spellings each, because the assertion is "was this named", not "was this
+  # named in my words".
+  declared:
+    - id: box-shadow
+      patterns: ["box.?shadow", "drop.?shadow", "\\bshadow\\b"]
+    - id: backdrop-blur
+      patterns: ["backdrop.?(blur|filter)", "\\bblur\\b", "frosted"]
+    - id: css-transition
+      patterns: ["transition", "animat", "\\beas(e|ing)\\b"]
+    - id: group-hover
+      patterns: ["group.?hover", "parent.{0,20}hover", "hover.{0,30}(child|parent)"]
+    - id: border-left-only
+      patterns: ["border.?left", "left.border", "one.?sided border", "left edge"]
+    - id: non-segoe-font
+      patterns: ["georgia", "serif", "non.?segoe", "font.{0,30}(unverified|not verified|renders)"]
+
+  # Property names that do not exist in this repo's catalog and that a model reaches
+  # for when it decides to fake the effect rather than admit it. The catalog lint
+  # would warn about any of them anyway; naming them here says WHICH failure it was.
+  forbidden_properties:
+    [Shadow, BoxShadow, DropShadow, ShadowColor, ShadowBlur, ShadowOffset,
+     Elevation, Blur, BlurRadius, BackdropFilter, BackdropBlur,
+     Transition, TransitionDuration, TransitionEasing,
+     Animation, AnimationDuration, Transform, Translate,
+     BorderLeft, BorderLeftColor, BorderLeftThickness, BorderLeftStyle,
+     BorderRadiusLeft, BorderSideThickness]
+
+  # The substitute controls.yaml actually sanctions for the one-sided border.
+  substitute_types: [Rectangle]

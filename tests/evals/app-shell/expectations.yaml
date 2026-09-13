@@ -1,0 +1,75 @@
+# Eval case: app-shell
+#
+# Scored by:  python scripts/run_eval.py OUTPUT.pa.yaml --case tests/evals/app-shell
+# Written up: notes.md (what this case stresses), docs/evals.md (how to run it)
+#
+# Every count below is a RANGE. Two good conversions of this mockup will not agree
+# on control count -- one may draw the progress bar with three Rectangles, another
+# may leave it out -- so an exact number would score style rather than correctness.
+# The ranges are wide enough for any sane reading of the mockup and narrow enough to
+# catch an output that dropped a region or padded it with filler.
+
+case: app-shell
+title: "Application shell: fixed sidebar, top bar, tiles"
+mockup: mockup.html
+
+canvas:
+  width: 1366
+  height: 768
+
+structure:
+  screens: {min: 1, max: 1}
+  required_screen_properties: [Fill]
+
+lint:
+  # pa_lint verdict codes: safe | unverified | will_fail | unproven.
+  verdict: [safe]
+  max_errors: 0
+  max_warnings: 0
+
+controls:
+  total: {min: 16, max: 40}
+  # The sidebar rows are the point of this case, and SKILL.md rule 5 says a nav row
+  # is a Classic/Button even when the mockup draws it as plain text. A conversion
+  # with no Button has turned the navigation into decoration.
+  required_types: [Label, Classic/Button, GroupContainer]
+  by_type:
+    Label:          {min: 4, max: 12}
+    Classic/Button: {min: 7, max: 16}   # 4 nav rows + 4 tiles + 1 CTA = 9
+    GroupContainer: {min: 1, max: 6}    # sidebar + top bar
+    Rectangle:      {min: 0, max: 10}
+    Classic/Icon:   {min: 0, max: 10}
+    Image:          {min: 0, max: 3}
+
+geometry:
+  in_bounds: true
+  # The mockup fits the viewport, so nothing should push the screen taller.
+  max_unresolved: 0
+
+navigation:
+  count: {min: 1}
+  targets_resolve: true
+
+catalog:
+  max_untagged_unverified: 0
+  max_unverified_properties: 0
+
+reference:
+  # Not model output. A hand-written screen that stands in for a good answer, so the
+  # scorer itself can be exercised in CI without running a model. See docs/evals.md.
+  output: ../../../skills/power-app-yaml/assets/examples/example-app-shell.yaml
+  known_deviations:
+    - check: lint.verdict
+      reason: >-
+        The reference uses FontWeight on five Classic/Buttons. controls.yaml records
+        FontWeight as confirmed on Label only and explicitly unverified on Button, so
+        L2 warns and the verdict is PASTES, BUT ... rather than SAFE TO PASTE. The
+        contradiction is real and open, and needs a Studio paste test to settle --
+        see the 0.2.0 known issues. Delete this waiver when it is settled.
+    - check: lint.warnings
+      reason: >-
+        The same five FontWeight warnings. Nothing else in the file warns.
+    - check: catalog.unverified-properties
+      reason: >-
+        The same five. They are tagged '# UNVERIFIED' in the file, which is why
+        catalog.untagged-unverified still passes -- the guess is labelled, not hidden.

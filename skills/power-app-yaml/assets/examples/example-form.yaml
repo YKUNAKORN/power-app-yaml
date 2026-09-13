@@ -937,7 +937,7 @@ Screens:
                   Height: =48
                   HoverColor: =ColorValue("#414754")
                   HoverFill: =ColorValue("#e6e8f3")
-                  OnSelect: =Navigate('Home', ScreenTransition.Fade)
+                  OnSelect: =Navigate('Home', ScreenTransition.Fade)  # placeholder - not a screen in this file; wire up once both screens are pasted
                   PressedColor: =ColorValue("#414754")
                   PressedFill: =ColorValue("#e6e8f3")
                   RadiusBottomLeft: =0
@@ -1026,7 +1026,7 @@ Screens:
                   Height: =48
                   HoverColor: =ColorValue("#414754")
                   HoverFill: =RGBA(230, 232, 243, 1)
-                  OnSelect: =Navigate('MyRequests', ScreenTransition.Fade)
+                  OnSelect: =Navigate('MyRequests', ScreenTransition.Fade)  # placeholder - not a screen in this file; wire up once both screens are pasted
                   PressedColor: =ColorValue("#414754")
                   PressedFill: =ColorValue("#e6e8f3")
                   RadiusBottomLeft: =0

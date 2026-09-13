@@ -49,6 +49,17 @@ SNIPPET_MIN = 12
 # The inventory tool exists to save context. If its one-page summary of a ten-screen
 # app stops fitting on a page, it has stopped doing its job.
 INVENTORY_MAX_BYTES = 2048
+# Eval cases. Five archetypes, each covering a layout shape the others do not --
+# plus the hard one, which covers the honesty path rather than a layout at all.
+EVAL_CASES_MIN = 5
+REQUIRED_EVAL_CASES = {
+    "app-shell", "multi-section-form", "card-grid",
+    "shell-with-form", "impossible-effects",
+}
+# A case asserting one or two of these is not measuring enough to tell a good
+# conversion from a bad one.
+EVAL_ASSERTION_BLOCKS = ("structure", "lint", "controls", "geometry", "navigation",
+                         "catalog", "limitations")
 
 errors: list[str] = []
 checks = 0
@@ -550,6 +561,113 @@ if layout_md.is_file():
             f.unlink(missing_ok=True)
         if tmp.is_dir():
             tmp.rmdir()
+
+print("Eval cases (tests/evals/)")
+evals_dir = ROOT / "tests" / "evals"
+check(evals_dir.is_dir(), "tests/evals/ present",
+      "the eval fixtures scripts/run_eval.py scores against")
+case_dirs = sorted(d for d in evals_dir.iterdir()
+                   if d.is_dir()) if evals_dir.is_dir() else []
+check(len(case_dirs) >= EVAL_CASES_MIN,
+      f"at least {EVAL_CASES_MIN} eval cases exist", f"found {len(case_dirs)}")
+missing_required = REQUIRED_EVAL_CASES - {d.name for d in case_dirs}
+check(not missing_required,
+      "the five archetypes all have a case",
+      f"missing: {sorted(missing_required)}. Each one covers a layout shape the "
+      "others do not, and the hard case covers the honesty path.")
+
+for case_dir in case_dirs:
+    name = case_dir.name
+    for filename in ("mockup.html", "expectations.yaml", "notes.md"):
+        check((case_dir / filename).is_file(), f"{name}/{filename} present",
+              "a case is a mockup, its assertions, and a written reason to exist")
+
+    mockup = case_dir / "mockup.html"
+    if mockup.is_file():
+        html = mockup.read_text(encoding="utf-8")
+        # A case that needs the network scores differently on a machine without it.
+        external = re.search(r"""(?:src|href)\s*=\s*["'](?:https?:)?//""", html, re.I)
+        imported = re.search(r"""@import\s+(?:url\()?['"]?(?:https?:)?//""", html, re.I)
+        check(external is None and imported is None,
+              f"{name}/mockup.html is self-contained",
+              "it pulls an external asset; a fixture that needs the network is not "
+              "a fixture")
+
+    spec_path = case_dir / "expectations.yaml"
+    if not spec_path.is_file():
+        continue
+    try:
+        spec = yaml.safe_load(spec_path.read_text(encoding="utf-8-sig")) or {}
+        check(isinstance(spec, dict), f"{name}/expectations.yaml is a mapping")
+    except yaml.YAMLError as e:
+        check(False, f"{name}/expectations.yaml parses", str(e))
+        continue
+    if not isinstance(spec, dict):
+        continue
+
+    asserted = [b for b in EVAL_ASSERTION_BLOCKS if b in spec]
+    check(len(asserted) >= 3,
+          f"{name}/expectations.yaml asserts something worth running",
+          f"only {asserted}. A case with one or two blocks is not measuring enough "
+          "to tell a good conversion from a bad one.")
+
+    # Every waiver has to say why. A deviation nobody can read is indistinguishable
+    # from a bug that was never fixed.
+    ref = spec.get("reference") or {}
+    for entry in ref.get("known_deviations") or []:
+        label = (entry or {}).get("check", "<unnamed>")
+        check(bool((entry or {}).get("check")) and bool((entry or {}).get("reason")),
+              f"{name} known deviation {label} states a reason",
+              "a waiver without a stated reason hides a regression")
+    if ref.get("output"):
+        target = (case_dir / ref["output"]).resolve()
+        check(target.is_file(), f"{name} reference output exists",
+              f"{ref['output']} does not resolve to a file")
+
+    # The hard case must assert effects controls.yaml actually takes a position on.
+    if "limitations" in spec and isinstance(catalog, dict):
+        known_ids = {e.get("id") for e in (catalog.get("impossible_css") or [])}
+        for entry in spec["limitations"].get("declared") or []:
+            eid = (entry or {}).get("id")
+            check(eid in known_ids,
+                  f"{name} limitation {eid!r} is in controls.yaml's impossible_css",
+                  "asserting an effect the catalog takes no position on means the "
+                  "case and the skill disagree about what is impossible")
+
+# The acceptance criterion, run rather than asserted: the scorer must score the
+# bundled examples against their matching cases without crashing.
+if case_dirs:
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "run_eval.py"), "--json"],
+        capture_output=True, text=True, cwd=str(ROOT))
+    payload = None
+    try:
+        payload = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        pass
+    check(proc.returncode in (0, 1) and payload is not None,
+          "run_eval.py scores the bundled references without crashing",
+          f"exit {proc.returncode}: {proc.stderr.strip()[:300]}")
+    if payload:
+        scored = {r["case"] for r in payload["results"]}
+        check(len(scored) >= 3,
+              "at least three cases carry a reference output",
+              f"scored: {sorted(scored)}")
+        bad = [(r["case"], row["check"], row["result"])
+               for r in payload["results"] for row in r["rows"]
+               if row["result"] in ("FAIL", "XPASS")]
+        check(not bad, "the eval self-check is clean",
+              f"{bad[:4]} -- an XPASS means a known deviation is stale and its "
+              "waiver should be deleted; a FAIL means the references drifted.")
+    check((ROOT / "docs" / "evals.md").is_file(), "docs/evals.md present",
+          "the manual loop; the scorer is deliberately not wired to a model")
+    evals_doc = (ROOT / "docs" / "evals.md")
+    if evals_doc.is_file():
+        text = evals_doc.read_text(encoding="utf-8")
+        check("CI does not run a model" in text,
+              "docs/evals.md states the boundary",
+              "the one thing a reader must not get wrong is that the scored half "
+              "and the generated half are different halves")
 
 print("Plugin metadata")
 plugin_json = ROOT / ".claude-plugin" / "plugin.json"

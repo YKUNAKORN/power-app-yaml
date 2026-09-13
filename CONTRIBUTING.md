@@ -90,11 +90,27 @@ To check a `.pa.yaml` you are working on:
 python scripts/pa_lint.py path/to/screen.pa.yaml
 ```
 
+## Changing SKILL.md, the catalog, or the patterns
+
+These change what the model produces, and "it looked fine when I tried it" is not
+evidence. Before and after your change, run at least two of the eval cases by hand and
+compare the tables:
+
+```bash
+# ask Claude to convert tests/evals/<case>/mockup.html, save the answer, then:
+python scripts/run_eval.py /tmp/out.pa.yaml --case tests/evals/app-shell
+```
+
+Put the before/after in the PR. [`docs/evals.md`](docs/evals.md) explains the loop, why
+it is manual, and — importantly — what the scorer cannot see, so the comparison is not
+oversold. One run per case is a sample of one; a row that flips once is weak evidence.
+
 ## Pull request checklist
 
 - [ ] `python scripts/validate.py` passes
 - [ ] `python -m unittest discover tests` passes
 - [ ] Catalog changes cite a Studio version
+- [ ] Changes to `SKILL.md` / catalog / patterns show a before-and-after eval run
 - [ ] `CHANGELOG.md` updated under `## [Unreleased]`
 - [ ] If behaviour changed, `plugin.json` `version` bumped (SemVer)
 

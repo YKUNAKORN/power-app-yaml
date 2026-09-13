@@ -1,0 +1,65 @@
+# Eval case: multi-section-form
+#
+# Scored by:  python scripts/run_eval.py OUTPUT.pa.yaml --case tests/evals/multi-section-form
+# See notes.md for what this case stresses, docs/evals.md for how to run it.
+#
+# Every count is a RANGE, for the reason given in app-shell/expectations.yaml: an
+# exact number would score style, not correctness.
+
+case: multi-section-form
+title: "Five-section request form that scrolls past the viewport"
+mockup: mockup.html
+
+canvas:
+  width: 1366
+  # The mockup runs to about 2032px. The screen's own Height wins over this number
+  # when the output sets one, so a conversion that correctly declares a taller screen
+  # is not punished for it -- see geometry.in-bounds in scripts/run_eval.py.
+  height: 768
+
+structure:
+  screens: {min: 1, max: 1}
+  required_screen_properties: [Fill, Height]   # content runs past 768; Height is the tell
+
+lint:
+  verdict: [safe]
+  max_errors: 0
+  max_warnings: 0
+
+controls:
+  total: {min: 55, max: 130}
+  # A form with no input control is not a form. DropDown matters separately: three
+  # of the sixteen fields are <select>, and turning a select into a text box is the
+  # most common way this case is quietly got wrong.
+  required_types: [Label, Classic/TextInput, Classic/DropDown, GroupContainer]
+  by_type:
+    Label:              {min: 24, max: 50}
+    Classic/TextInput:  {min: 12, max: 20}   # 16 <input> in the mockup
+    Classic/DropDown:   {min: 3, max: 8}     # 5 <select> in the mockup
+    GroupContainer:     {min: 5, max: 12}    # 5 cards + shell
+    Classic/Button:     {min: 4, max: 12}    # 4 nav rows + 2 actions
+    Rectangle:          {min: 0, max: 16}
+    Classic/Icon:       {min: 0, max: 10}
+    Image:              {min: 0, max: 3}
+  # Gallery is the tempting wrong answer for "a repeating list of fields". It is in
+  # controls.yaml's unattempted_controls -- no evidence either way -- so it must not
+  # appear in a file handed over as ready to paste.
+  forbidden_types: [Gallery, Form, DataTable]
+
+geometry:
+  in_bounds: true
+  max_unresolved: 0
+
+navigation:
+  count: {min: 1}
+  targets_resolve: true
+
+catalog:
+  max_untagged_unverified: 0
+  max_unverified_properties: 0
+
+reference:
+  # Not model output -- a hand-written screen standing in for a good answer, so the
+  # scorer can be exercised in CI without running a model. See docs/evals.md.
+  output: ../../../skills/power-app-yaml/assets/examples/example-form.yaml
+  known_deviations: []
